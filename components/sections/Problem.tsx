@@ -15,6 +15,7 @@ import {
   Scale,
   Search,
 } from "lucide-react";
+import { Stagger, StaggerItem } from "../ui/Reveal";
 
 const EASE = [0.22, 1, 0.36, 1] as const;
 
@@ -427,52 +428,63 @@ function ConsequenceCard({
   };
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20, filter: "blur(4px)" }}
-      whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.6, delay: 0.15 + index * 0.1, ease: EASE }}
+    <div
       onMouseMove={handleMouseMove}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
-      className="glass group relative flex flex-col gap-2.5 overflow-hidden rounded-xl border border-edge bg-white/[0.02] p-4 transition-all duration-500 hover:border-[#f5a524]/30 hover:shadow-[0_0_24px_rgba(245,165,36,0.08)]"
+      className="group relative flex flex-col justify-between overflow-hidden bg-[#05070a] p-5 transition-colors duration-300 hover:bg-[#07090f]/70 border-r border-b border-edge"
+      style={{ minHeight: "170px" }}
       data-cursor="hover"
     >
+      {/* Repeating Dot Grid */}
+      <div
+        className="pointer-events-none absolute inset-0 opacity-[0.03] transition-opacity duration-300 group-hover:opacity-[0.06]"
+        style={{
+          backgroundImage: "radial-gradient(white 1px, transparent 1px)",
+          backgroundSize: "12px 12px",
+        }}
+      />
+
+      {/* Dynamic Hover Glow spotlight in warning amber */}
       {hovered && (
         <div
-          className="pointer-events-none absolute inset-0 z-0 rounded-xl opacity-100 transition-opacity duration-300"
+          className="pointer-events-none absolute inset-0 z-0 opacity-100 transition-opacity duration-300"
           style={{
-            background: `radial-gradient(circle 100px at ${coords.x}px ${coords.y}px, rgba(245, 165, 36, 0.08), transparent 70%)`,
+            background: `radial-gradient(circle 90px at ${coords.x}px ${coords.y}px, rgba(245, 165, 36, 0.08), transparent 70%)`,
           }}
         />
       )}
 
-      <div className="relative z-10 flex flex-col gap-2.5 h-full">
-        <Icon size={16} className="shrink-0 text-warning transition-transform duration-300 group-hover:scale-110" />
-        <div>
-          <p className="text-sm font-medium text-white/85 transition-colors duration-300 group-hover:text-white">{label}</p>
-          <p className="mt-1 text-xs leading-relaxed text-text-muted">
-            {detail}
-          </p>
+      <div className="relative z-10 flex flex-col gap-2 h-full justify-between">
+        <div className="flex flex-col gap-2.5">
+          <Icon size={16} className="shrink-0 text-warning transition-transform duration-300 group-hover:scale-110" />
+          <div>
+            <p className="text-xs font-semibold text-white/95 group-hover:text-white transition-colors duration-300">{label}</p>
+            <p className="mt-1 text-[11px] leading-relaxed text-text-secondary">
+              {detail}
+            </p>
+          </div>
         </div>
 
-        {/* Compounding-cost bar */}
-        <div className="mt-auto h-px w-full overflow-hidden rounded-full bg-white/[0.06]">
+        {/* Compounding-cost progress bar (glowing warning loading meter) */}
+        <div className="mt-4 h-[3px] w-full overflow-hidden rounded-full bg-white/[0.04] relative">
           <motion.div
             initial={{ scaleX: 0 }}
             whileInView={{ scaleX: 1 }}
             viewport={{ once: true }}
             transition={{
               duration: 1.2,
-              delay: 0.5 + index * 0.12,
+              delay: 0.2 + index * 0.1,
               ease: EASE,
             }}
-            style={{ originX: 0, width: `${45 + index * 13}%` }}
-            className="h-full bg-gradient-to-r from-warning/60 to-warning/20"
+            style={{ originX: 0, width: `${35 + index * 15}%` }}
+            className={`h-full bg-gradient-to-r from-warning to-warning/40 transition-shadow duration-300 ${
+              hovered ? "shadow-[0_0_8px_rgba(245,165,36,0.8)]" : ""
+            }`}
           />
         </div>
       </div>
-    </motion.div>
+    </div>
   );
 }
 
@@ -554,18 +566,20 @@ export function Problem() {
             And the cost compounds
           </p>
 
-          <div className="mx-auto mt-8 grid max-w-4xl grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-5">
+          {/* Bento Border-Grid Container (gap-0) */}
+          <Stagger className="mx-auto mt-8 overflow-hidden rounded-2xl border-t border-l border-edge bg-[#05070a] grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-0" gap={0.05}>
             {CONSEQUENCES.map((c, i) => (
-              <ConsequenceCard
-                key={c.label}
-                icon={c.icon}
-                label={c.label}
-                detail={c.detail}
-                index={i}
-                reduce={reduce}
-              />
+              <StaggerItem key={c.label}>
+                <ConsequenceCard
+                  icon={c.icon}
+                  label={c.label}
+                  detail={c.detail}
+                  index={i}
+                  reduce={reduce}
+                />
+              </StaggerItem>
             ))}
-          </div>
+          </Stagger>
         </motion.div>
 
         {/* Caption */}
