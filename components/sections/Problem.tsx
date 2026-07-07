@@ -151,14 +151,6 @@ function SeveredLine({
   isHovered: boolean;
   color: string;
 }) {
-  const breakT = 0.62;
-  const targetT = isHovered ? 1.0 : breakT;
-  const bx = from.x + (to.x - from.x) * breakT;
-  const by = from.y + (to.y - from.y) * breakT;
-  
-  const endX = from.x + (to.x - from.x) * targetT;
-  const endY = from.y + (to.y - from.y) * targetT;
-
   const gradId = `sever-${index}`;
 
   return (
@@ -169,114 +161,66 @@ function SeveredLine({
           gradientUnits="userSpaceOnUse"
           x1={from.x}
           y1={from.y}
-          x2={endX}
-          y2={endY}
+          x2={to.x}
+          y2={to.y}
         >
-          <stop offset="0%" stopColor={isHovered ? color : "rgba(239,68,68,0.4)"} />
-          <stop offset="75%" stopColor={isHovered ? color : "rgba(239,68,68,0.2)"} stopOpacity={0.6} />
-          <stop offset="100%" stopColor={isHovered ? color : "rgba(239,68,68,0)"} stopOpacity={isHovered ? 0.8 : 0} />
+          {isHovered ? (
+            <>
+              <stop offset="0%" stopColor={color} stopOpacity={1} />
+              <stop offset="100%" stopColor={color} stopOpacity={0.8} />
+            </>
+          ) : (
+            <>
+              <stop offset="0%" stopColor="rgba(255,255,255,0.18)" />
+              <stop offset="35%" stopColor="rgba(255,255,255,0.06)" />
+              <stop offset="60%" stopColor="rgba(255,255,255,0)" />
+            </>
+          )}
         </linearGradient>
       </defs>
 
-      {/* Dotted Connection line */}
+      {/* Connection Line (Extends to hub, but fades out to transparent when not hovered) */}
       <motion.line
         x1={from.x}
         y1={from.y}
-        x2={endX}
-        y2={endY}
+        x2={to.x}
+        y2={to.y}
         stroke={`url(#${gradId})`}
         strokeWidth={isHovered ? 1.5 : 1}
         strokeDasharray={isHovered ? "4 3" : "3 4"}
         vectorEffect="non-scaling-stroke"
-        animate={{
-          x2: endX,
-          y2: endY,
-          strokeDashoffset: reduce ? 0 : [0, isHovered ? -20 : -14],
+        animate={reduce ? {} : {
+          strokeDashoffset: [0, isHovered ? -20 : -14],
         }}
+        // @ts-ignore
         transition={{
-          x2: { duration: 0.45, ease: "easeOut" },
-          y2: { duration: 0.45, ease: "easeOut" },
           strokeDashoffset: {
-            duration: isHovered ? 1.6 : 2.4,
+            duration: isHovered ? 1.6 : 2.8,
             repeat: Infinity,
             ease: "linear",
           },
         }}
       />
 
-      {/* Friction pulse underlay (Flickers in red when not hovered) */}
-      {!isHovered && !reduce && (
-        <motion.line
-          x1={from.x}
-          y1={from.y}
-          x2={bx}
-          y2={by}
-          stroke="rgba(239,68,68,0.25)"
-          strokeWidth="1.5"
-          strokeDasharray="2 20"
-          animate={{
-            strokeDashoffset: [0, -40],
-            opacity: [0.15, 0.45, 0.15]
-          }}
-          // @ts-ignore
-          transition={{
-            strokeDashoffset: { duration: 1.5, repeat: Infinity, ease: "linear" },
-            opacity: { duration: 0.8, repeat: Infinity, ease: "easeInOut", delay: index * 0.1 }
-          }}
-        />
-      )}
-
-      {/* Energy Pulse (Only when hovered - flowing cleanly to the hub) */}
-      {isHovered && !reduce && (
+      {/* Dissolving Signal Pulse (Evaporates and fades out at 60% distance when not hovered) */}
+      {!reduce && (
         <motion.circle
-          r={1.5}
-          fill={color}
+          r={isHovered ? 1.5 : 1}
+          fill={isHovered ? color : "rgba(239,68,68,0.7)"}
           initial={{ cx: from.x, cy: from.y }}
           animate={{
             cx: [from.x, to.x],
             cy: [from.y, to.y],
+            opacity: isHovered ? [0.9, 0.9] : [0.85, 0.6, 0],
           }}
           transition={{
-            duration: 1.4,
+            duration: isHovered ? 1.4 : 2.4,
             repeat: Infinity,
             ease: "easeInOut",
+            delay: index * 0.15,
           }}
         />
       )}
-
-      {/* Red Signal-Death 'X' indicator */}
-      <motion.g
-        animate={{
-          opacity: isHovered ? 0 : 1,
-          scale: isHovered ? 0 : [1, 1.25, 1],
-        }}
-        transition={{
-          opacity: { duration: 0.3 },
-          scale: { duration: 2.2, repeat: Infinity, ease: "easeInOut", delay: index * 0.2 },
-        }}
-        style={{ transformOrigin: `${bx}px ${by}px` }}
-      >
-        <line
-          x1={bx - 1.1}
-          y1={by - 1.1}
-          x2={bx + 1.1}
-          y2={by + 1.1}
-          stroke="rgba(239,68,68,0.85)"
-          strokeWidth={1.2}
-          vectorEffect="non-scaling-stroke"
-          strokeLinecap="round"
-        />
-        <line
-          x1={bx + 1.1}
-          y1={by - 1.1}
-          x2={bx - 1.1}
-          y2={by + 1.1}
-          stroke="rgba(239,68,68,0.85)"
-          strokeWidth={1.2}
-          vectorEffect="non-scaling-stroke"
-          strokeLinecap="round"
-        />
-      </motion.g>
     </g>
   );
 }
