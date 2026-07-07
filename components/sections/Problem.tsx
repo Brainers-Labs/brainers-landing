@@ -15,7 +15,7 @@ import {
   Scale,
   Search,
 } from "lucide-react";
-import { Stagger, StaggerItem } from "../ui/Reveal";
+import { Reveal, Stagger, StaggerItem } from "../ui/Reveal";
 
 const EASE = [0.22, 1, 0.36, 1] as const;
 
@@ -29,7 +29,7 @@ type ToolNode = {
   svg: React.ReactNode;
 };
 
-// Custom high-fidelity brand SVGs for the drifting islands
+// Custom brand SVGs for the drifting islands
 const SlackIcon = () => (
   <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none">
     <path d="M5.042 15.165a2.528 2.528 0 0 1-2.52 2.523 2.528 2.528 0 0 1-2.522-2.523 2.528 2.528 0 0 1 2.522-2.52h2.52v2.52zM6.305 15.165a2.528 2.528 0 0 1 2.52-2.52h5.043a2.528 2.528 0 0 1 2.522 2.52v5.043a2.528 2.528 0 0 1-2.522 2.52H8.825a2.528 2.528 0 0 1-2.52-2.52v-5.043z" fill="#E01E5A" />
@@ -105,7 +105,7 @@ const CONSEQUENCES = [
   { icon: FileX, label: "Duplicated work", detail: "Same problem, solved twice" },
   { icon: Telescope, label: "Knowledge loss", detail: "Expertise leaves with people" },
   { icon: GitBranch, label: "Inconsistent decisions", detail: "Teams act on different facts" },
-  { icon: UserX, label: "Slow onboarding", detail: "Months to find the context" },
+  { icon: UserX, label: "Slow onboarding", detail: "Months to find context" },
   { icon: Scale, label: "Compliance risks", detail: "No single source of truth" },
 ];
 
@@ -293,9 +293,9 @@ function ScatterMap() {
   const [hoveredTool, setHoveredTool] = useState<number | null>(null);
 
   return (
-    <div className="relative mx-auto mt-16 h-[420px] w-full max-w-4xl sm:h-[480px]">
+    <div className="relative mx-auto h-[380px] w-full max-w-2xl sm:h-[440px]">
       {/* Ambient glow */}
-      <div className="pointer-events-none absolute left-1/2 top-1/2 h-96 w-96 -translate-x-1/2 -translate-y-1/2 rounded-full bg-accent/5 blur-[110px]" />
+      <div className="pointer-events-none absolute left-1/2 top-1/2 h-80 w-80 -translate-x-1/2 -translate-y-1/2 rounded-full bg-accent/5 blur-[100px]" />
 
       {/* Connection Lines */}
       <svg
@@ -326,7 +326,7 @@ function ScatterMap() {
           [0, 1, 2].map((i) => (
             <motion.div
               key={i}
-              className="absolute left-1/2 top-1/2 h-24 w-24 -translate-x-1/2 -translate-y-1/2 rounded-full border border-red-500/25"
+              className="absolute left-1/2 top-1/2 h-20 w-20 -translate-x-1/2 -translate-y-1/2 rounded-full border border-red-500/25"
               initial={{ scale: 0.3, opacity: 0 }}
               animate={{ scale: 2.6, opacity: [0, 0.4, 0] }}
               transition={{
@@ -432,8 +432,8 @@ function ConsequenceCard({
       onMouseMove={handleMouseMove}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
-      className="group relative flex flex-col justify-between overflow-hidden bg-[#05070a] p-5 transition-colors duration-300 hover:bg-[#07090f]/70 border-r border-b border-edge"
-      style={{ minHeight: "170px" }}
+      className="group relative flex flex-col justify-between overflow-hidden bg-[#05070a] p-4 transition-colors duration-300 hover:bg-[#07090f]/70 border-r border-b border-edge"
+      style={{ minHeight: "110px" }}
       data-cursor="hover"
     >
       {/* Repeating Dot Grid */}
@@ -456,25 +456,25 @@ function ConsequenceCard({
       )}
 
       <div className="relative z-10 flex flex-col gap-2 h-full justify-between">
-        <div className="flex flex-col gap-2.5">
-          <Icon size={16} className="shrink-0 text-warning transition-transform duration-300 group-hover:scale-110" />
+        <div className="flex items-start gap-3">
+          <Icon size={15} className="shrink-0 text-warning transition-transform duration-300 group-hover:scale-110 mt-0.5" />
           <div>
             <p className="text-xs font-semibold text-white/95 group-hover:text-white transition-colors duration-300">{label}</p>
-            <p className="mt-1 text-[11px] leading-relaxed text-text-secondary">
+            <p className="mt-0.5 text-[10px] leading-relaxed text-text-secondary">
               {detail}
             </p>
           </div>
         </div>
 
         {/* Compounding-cost progress bar (glowing warning loading meter) */}
-        <div className="mt-4 h-[3px] w-full overflow-hidden rounded-full bg-white/[0.04] relative">
+        <div className="mt-2 h-[3px] w-full overflow-hidden rounded-full bg-white/[0.04] relative">
           <motion.div
             initial={{ scaleX: 0 }}
             whileInView={{ scaleX: 1 }}
             viewport={{ once: true }}
             transition={{
               duration: 1.2,
-              delay: 0.2 + index * 0.1,
+              delay: 0.1 + index * 0.08,
               ease: EASE,
             }}
             style={{ originX: 0, width: `${35 + index * 15}%` }}
@@ -520,67 +520,64 @@ export function Problem() {
           </p>
         </motion.div>
 
-        {/* Signature infographic: the scatter map */}
-        <ScatterMap />
+        {/* 1 Row, 2 Columns Asymmetric Compress Layout */}
+        <div className="mt-16 grid items-center gap-12 lg:grid-cols-[1.2fr_1fr]">
+          
+          {/* Column 1: ScatterMap Infographic */}
+          <Reveal className="w-full" y={32}>
+            <ScatterMap />
+          </Reveal>
 
-        {/* The cost — big animated stat with glowing warning accent */}
-        <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-8% 0px" }}
-          transition={{ duration: 0.9, ease: EASE }}
-          className="mt-20 flex flex-col items-center text-center"
-        >
-          <div className="flex items-baseline gap-1 text-6xl font-semibold tracking-tight sm:text-7xl">
-            <span className="gradient-text text-glow shadow-[0_0_40px_rgba(245,165,36,0.2)]">
-              <StatCounter target={19} suffix="%" />
-            </span>
+          {/* Column 2: Stat Counter + Bento Compounding Cards stacked vertically */}
+          <div className="flex flex-col gap-8">
+            
+            {/* Animated Stat Counter Card */}
+            <motion.div
+              initial={{ opacity: 0, y: 24 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-8% 0px" }}
+              transition={{ duration: 0.9, ease: EASE }}
+              className="flex items-center gap-6 rounded-2xl border border-edge bg-white/[0.01] p-6 shadow-[0_4px_30px_rgba(0,0,0,0.1)]"
+            >
+              <div className="flex items-baseline gap-1 text-5xl font-semibold tracking-tight sm:text-6xl">
+                <span className="gradient-text text-glow shadow-[0_0_40px_rgba(245,165,36,0.2)]">
+                  <StatCounter target={19} suffix="%" />
+                </span>
+              </div>
+              <div className="text-left">
+                <p className="text-xs leading-relaxed text-text-secondary">
+                  of the average workweek is spent just searching for and gathering information — nearly a full day, every week.
+                </p>
+                <p className="mt-1 text-[10px] uppercase tracking-wider text-text-muted">
+                  Source: McKinsey Global Institute
+                </p>
+              </div>
+            </motion.div>
+
+            {/* Vertical Bento Border-Grid Column */}
+            <div>
+              <p className="text-left text-[10px] font-bold uppercase tracking-[0.25em] text-text-muted mb-3">
+                And the cost compounds
+              </p>
+              
+              <Stagger className="overflow-hidden rounded-2xl border-t border-l border-edge bg-[#05070a] grid grid-cols-1 gap-0" gap={0.04}>
+                {CONSEQUENCES.map((c, i) => (
+                  <StaggerItem key={c.label}>
+                    <ConsequenceCard
+                      icon={c.icon}
+                      label={c.label}
+                      detail={c.detail}
+                      index={i}
+                      reduce={reduce}
+                    />
+                  </StaggerItem>
+                ))}
+              </Stagger>
+            </div>
+
           </div>
-          <p className="mt-3 max-w-md text-balance text-sm leading-relaxed text-text-secondary">
-            of the average workweek is spent just searching for and gathering
-            information — nearly a full day, every week, per employee.
-          </p>
-          <p className="mt-2 text-xs uppercase tracking-[0.18em] text-text-muted">
-            Source: McKinsey Global Institute
-          </p>
-        </motion.div>
 
-        {/* Divider */}
-        <motion.div
-          initial={{ scaleX: 0 }}
-          whileInView={{ scaleX: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 1.2, ease: EASE }}
-          className="mx-auto mt-16 h-px w-32 origin-center bg-gradient-to-r from-transparent via-red-500/25 to-transparent"
-        />
-
-        {/* Consequences — cascading cost cards */}
-        <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-8% 0px" }}
-          transition={{ duration: 0.9, ease: EASE }}
-          className="mt-12"
-        >
-          <p className="text-center text-sm font-medium uppercase tracking-[0.22em] text-text-muted">
-            And the cost compounds
-          </p>
-
-          {/* Bento Border-Grid Container (gap-0) */}
-          <Stagger className="mx-auto mt-8 overflow-hidden rounded-2xl border-t border-l border-edge bg-[#05070a] grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-0" gap={0.05}>
-            {CONSEQUENCES.map((c, i) => (
-              <StaggerItem key={c.label}>
-                <ConsequenceCard
-                  icon={c.icon}
-                  label={c.label}
-                  detail={c.detail}
-                  index={i}
-                  reduce={reduce}
-                />
-              </StaggerItem>
-            ))}
-          </Stagger>
-        </motion.div>
+        </div>
 
         {/* Caption */}
         <motion.p
