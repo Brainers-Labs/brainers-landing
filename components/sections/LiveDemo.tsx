@@ -106,7 +106,7 @@ export function LiveDemo() {
         />
 
         <Reveal className="mt-16" y={40}>
-          <div ref={ref} className="glass-strong relative mx-auto max-w-3xl overflow-hidden rounded-3xl shadow-[0_40px_120px_rgba(0,0,0,0.5)]">
+          <div ref={ref} className="glass-strong relative mx-auto w-full overflow-hidden rounded-3xl shadow-[0_40px_120px_rgba(0,0,0,0.5)]">
             <div className="hairline-gradient absolute inset-x-0 top-0" />
 
             {/* Window chrome */}
