@@ -29,6 +29,7 @@
   --animate-marquee: marquee 42s linear infinite;
   --animate-pulse-soft: pulse-soft 4s ease-in-out infinite;
   --animate-orbit: orbit 24s linear infinite;
+  --animate-gradient-spin: gradient-spin 4s linear infinite;
 
   @keyframes marquee {
     from { transform: translateX(0); }
@@ -39,6 +40,10 @@
     50% { opacity: 1; transform: scale(1.035); }
   }
   @keyframes orbit {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+  @keyframes gradient-spin {
     from { transform: rotate(0deg); }
     to { transform: rotate(360deg); }
   }

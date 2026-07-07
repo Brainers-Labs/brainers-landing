@@ -1,7 +1,8 @@
 "use client";
 
-import { motion } from "framer-motion";
-import { ArrowDown, ArrowRight, ArrowUpRight, BarChart3, PlayCircle, Zap } from "lucide-react";
+import { motion, useScroll, useTransform, useMotionValue, useSpring } from "framer-motion";
+import { ArrowRight, ArrowUpRight, BarChart3, Zap } from "lucide-react";
+import { useState, useRef } from "react";
 import dynamic from "next/dynamic";
 
 const KnowledgeSphere = dynamic(() => import("../three/KnowledgeSphere"), {
@@ -13,12 +14,6 @@ const KnowledgeSphere = dynamic(() => import("../three/KnowledgeSphere"), {
 
 const EASE = [0.22, 1, 0.36, 1] as const;
 
-const AVATARS = [
-  ["#e8c39a", "#8a5a33"],
-  ["#b7c9e0", "#3d5573"],
-  ["#cbb7e0", "#5b3d73"],
-];
-
 function StatCard({
   icon,
   tag,
@@ -26,6 +21,7 @@ function StatCard({
   label,
   className,
   delay,
+  scrollTransform,
 }: {
   icon: React.ReactNode;
   tag: string;
@@ -33,50 +29,138 @@ function StatCard({
   label: string;
   className: string;
   delay: number;
+  scrollTransform?: any;
 }) {
+  const [coords, setCoords] = useState({ x: 0, y: 0 });
+  const [hovered, setHovered] = useState(false);
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    setCoords({
+      x: e.clientX - rect.left,
+      y: e.clientY - rect.top,
+    });
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 28, scale: 0.96 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
       transition={{ duration: 1, delay, ease: EASE }}
+      style={{ y: scrollTransform }}
       className={`absolute z-20 ${className}`}
     >
       <motion.div
         animate={{ y: [0, -9, 0] }}
         whileHover={{ y: -6, scale: 1.03 }}
         transition={{ duration: 6, repeat: Infinity, ease: "easeInOut", delay }}
+        onMouseMove={handleMouseMove}
+        onMouseEnter={() => setHovered(true)}
+        onMouseLeave={() => setHovered(false)}
         data-cursor="hover"
-        className="group w-[13.5rem] rounded-2xl border border-white/[0.08] bg-holo-card/85 p-4 backdrop-blur-xl transition-[border-color,box-shadow] duration-500 hover:border-[#3d7bff]/45 hover:shadow-[0_0_36px_rgba(61,123,255,0.22)] sm:w-60 sm:p-5"
+        className="group relative w-[13.5rem] sm:w-60 p-[1px] overflow-hidden rounded-2xl transition-[box-shadow] duration-500 hover:shadow-[0_0_36px_rgba(61,123,255,0.25)]"
       >
-        <div className="flex items-start justify-between">
-          <span className="flex h-9 w-9 items-center justify-center rounded-xl border border-white/10 bg-white/[0.05] text-white/90 transition-colors duration-500 group-hover:border-[#3d7bff]/40 group-hover:text-[#8fd0ff]">
-            {icon}
-          </span>
-          <ArrowUpRight size={16} className="text-white/40 transition-all duration-500 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-[#35d6ff]" />
+        {/* Spinning Gradient Border Layer */}
+        <div className="absolute inset-[-150%] animate-[gradient-spin_6s_linear_infinite] bg-[conic-gradient(from_0deg,transparent_30%,#3d7bff_50%,transparent_70%,#35d6ff_90%,transparent_100%)] opacity-60 group-hover:opacity-100 transition-opacity duration-500" />
+
+        {/* Inner Card Frame */}
+        <div className="relative z-10 w-full h-full rounded-[15px] bg-[#090b10]/95 p-4 sm:p-5 backdrop-blur-xl">
+          {/* Dynamic Glass Glare Overlay */}
+          {hovered && (
+            <div
+              className="pointer-events-none absolute inset-0 z-0 rounded-[15px] opacity-100 transition-opacity duration-300"
+              style={{
+                background: `radial-gradient(circle 140px at ${coords.x}px ${coords.y}px, rgba(61, 123, 255, 0.12), transparent 70%)`,
+              }}
+            />
+          )}
+
+          <div className="relative z-10">
+            <div className="flex items-start justify-between">
+              <span className="flex h-9 w-9 items-center justify-center rounded-xl border border-white/10 bg-white/[0.05] text-white/90 transition-colors duration-500 group-hover:border-[#3d7bff]/40 group-hover:text-[#8fd0ff]">
+                {icon}
+              </span>
+              <ArrowUpRight
+                size={16}
+                className="text-white/40 transition-all duration-500 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-[#35d6ff]"
+              />
+            </div>
+            <p className="mt-4 text-[10px] font-semibold uppercase tracking-wider text-electric/80">
+              {tag}
+            </p>
+            <p className="mt-1 font-display text-3xl font-medium tracking-tight text-white sm:text-4xl">
+              {value}
+            </p>
+            <p className="mt-1.5 text-xs leading-relaxed text-white/60">{label}</p>
+          </div>
         </div>
-        <p className="mt-4 text-[10px] font-semibold uppercase tracking-wider text-electric/80">
-          {tag}
-        </p>
-        <p className="mt-1 font-display text-3xl font-medium tracking-tight text-white sm:text-4xl">
-          {value}
-        </p>
-        <p className="mt-1.5 text-xs leading-relaxed text-white/60">{label}</p>
       </motion.div>
     </motion.div>
   );
 }
 
-export function Hero() {
+// Magnetic Wrapper Component for Hero CTAs
+function MagneticWrapper({ children, className = "" }: { children: React.ReactNode; className?: string }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
+  const sx = useSpring(x, { stiffness: 180, damping: 16, mass: 0.6 });
+  const sy = useSpring(y, { stiffness: 180, damping: 16, mass: 0.6 });
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    const el = ref.current;
+    if (!el) return;
+    const rect = el.getBoundingClientRect();
+    x.set((e.clientX - rect.left - rect.width / 2) * 0.28);
+    y.set((e.clientY - rect.top - rect.height / 2) * 0.28);
+  };
+
+  const handleMouseLeave = () => {
+    x.set(0);
+    y.set(0);
+  };
+
   return (
-    <section className="relative overflow-hidden bg-holo">
-      <div className="relative mx-auto flex min-h-svh max-w-7xl flex-col px-6 pb-8 pt-24 sm:pt-28 lg:px-10">
-        {/* 3D glass orb — right side */}
-        <div className="pointer-events-none absolute inset-y-0 right-[-14%] w-[80%] opacity-60 sm:opacity-100 lg:right-[-4%] lg:w-[54%]">
+    <motion.div
+      ref={ref}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      style={{ x: sx, y: sy }}
+      className={`inline-block ${className}`}
+    >
+      {children}
+    </motion.div>
+  );
+}
+
+export function Hero() {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const { scrollY } = useScroll();
+
+  // Scroll transforms for parallax depth
+  const orbY = useTransform(scrollY, [0, 800], [0, 160]);
+  const card1Y = useTransform(scrollY, [0, 800], [0, -60]);
+  const card2Y = useTransform(scrollY, [0, 800], [0, -100]);
+  const textY = useTransform(scrollY, [0, 800], [0, 45]);
+
+  const lineVariants = {
+    hidden: { y: "100%" },
+    visible: { y: 0 },
+  };
+
+  return (
+    <section ref={containerRef} className="relative overflow-hidden bg-holo">
+      <div className="relative mx-auto flex min-h-svh max-w-7xl flex-col justify-center px-6 pb-8 pt-8 lg:px-10">
+        {/* 3D glass orb — right side with parallax */}
+        <motion.div
+          style={{ y: orbY }}
+          className="pointer-events-none absolute inset-y-0 right-[-14%] w-[80%] opacity-60 sm:opacity-100 lg:right-[-4%] lg:w-[54%]"
+        >
           <div className="absolute inset-[6%] rounded-full bg-[radial-gradient(circle,rgba(61,123,255,0.16),rgba(21,30,71,0.14)_45%,transparent_65%)]" />
           <KnowledgeSphere />
-        </div>
+        </motion.div>
 
-        {/* Floating stat cards over the orb */}
+        {/* Floating stat cards over the orb with individual parallax offsets */}
         <StatCard
           icon={<BarChart3 size={16} />}
           tag="Modeled impact"
@@ -84,6 +168,7 @@ export function Hero() {
           label="Avg. Time Searching for Answers"
           className="right-4 top-[18%] hidden sm:right-10 md:block lg:right-16"
           delay={2.7}
+          scrollTransform={card1Y}
         />
         <StatCard
           icon={<Zap size={16} />}
@@ -92,12 +177,13 @@ export function Hero() {
           label="Saved Per Employee, Every Week"
           className="bottom-[16%] right-[34%] hidden md:block lg:right-[36%]"
           delay={2.9}
+          scrollTransform={card2Y}
         />
 
-        {/* Left column */}
-        <div className="relative z-10 max-w-3xl">
+        {/* Left column (Narrative) */}
+        <motion.div style={{ y: textY }} className="relative z-10 max-w-2xl lg:pr-16">
           <motion.a
-            href="#how-it-works"
+            href="/product"
             initial={{ opacity: 0, y: 18, filter: "blur(8px)" }}
             animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
             transition={{ duration: 0.9, delay: 1.7, ease: EASE }}
@@ -113,101 +199,81 @@ export function Hero() {
             <ArrowRight size={14} className="text-neon" />
           </motion.a>
 
-          <motion.h1
-            initial={{ opacity: 0, y: 34, filter: "blur(12px)" }}
-            animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-            transition={{ duration: 1.2, delay: 1.85, ease: EASE }}
-            className="mt-7 font-display text-[clamp(2.2rem,4.3vw,3.8rem)] font-medium leading-[1.1] tracking-[-0.02em] text-[#efefec]"
-          >
-            <span className="sm:whitespace-nowrap">Your Company&apos;s Intelligence.</span>
-            <br />
-            <span className="whitespace-nowrap">Finally Connected.</span>
-          </motion.h1>
+          {/* Masked Heading with staggered entry */}
+          <h1 className="mt-7 font-display text-[clamp(1.65rem,4.5vw,3.2rem)] font-medium leading-[1.2] tracking-[-0.02em] text-[#efefec]">
+            <span className="relative block overflow-hidden">
+              <motion.span
+                className="block whitespace-nowrap"
+                initial="hidden"
+                animate="visible"
+                variants={lineVariants}
+                transition={{ duration: 1.1, delay: 1.85, ease: EASE }}
+              >
+                Your Company&apos;s Intelligence.
+              </motion.span>
+            </span>
+            <span className="relative block overflow-hidden mt-1 sm:mt-2">
+              <motion.span
+                className="block bg-gradient-to-r from-[#3d7bff] to-[#35d6ff] bg-clip-text text-transparent whitespace-nowrap"
+                initial="hidden"
+                animate="visible"
+                variants={lineVariants}
+                transition={{ duration: 1.1, delay: 2.05, ease: EASE }}
+              >
+                Finally Connected.
+              </motion.span>
+            </span>
+          </h1>
 
           <motion.p
             initial={{ opacity: 0, y: 26, filter: "blur(8px)" }}
             animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-            transition={{ duration: 1.1, delay: 2.1, ease: EASE }}
+            transition={{ duration: 1.1, delay: 2.25, ease: EASE }}
             className="mt-8 max-w-sm text-[15px] leading-relaxed text-white/50"
           >
-            BrainersOS is the intelligence operating system that turns every
-            document, message, and decision in your company into one
-            connected brain — so any team, and any AI, can reason from the
-            same truth.
+            BrainersOS transforms documents, conversations, workflows,
+            policies and institutional knowledge into an AI-native operating
+            system that understands, reasons, remembers and acts.
           </motion.p>
 
+          {/* Magnetic CTAs */}
           <motion.div
             initial={{ opacity: 0, y: 22 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1, delay: 2.3, ease: EASE }}
+            transition={{ duration: 1, delay: 2.45, ease: EASE }}
             className="mt-9 flex flex-wrap items-center gap-4"
           >
-            <a
-              href="#cta"
-              data-cursor="hover"
-              className="electric-gradient group inline-flex items-center gap-4 rounded-2xl py-1.5 pl-6 pr-1.5 shadow-[0_0_36px_rgba(61,123,255,0.35)] transition-all duration-300 hover:scale-[1.03] hover:shadow-[0_0_52px_rgba(61,123,255,0.5)]"
-            >
-              <span className="text-[15px] font-semibold text-white">
-                Request Demo
-              </span>
-              <span className="flex h-10 w-10 items-center justify-center rounded-[0.8rem] bg-holo text-neon transition-transform duration-300 group-hover:rotate-45">
-                <ArrowUpRight size={17} />
-              </span>
-            </a>
-            <a
-              href="#how-it-works"
-              data-cursor="hover"
-              className="group inline-flex items-center gap-3 rounded-2xl border border-white/15 py-[0.6rem] pl-6 pr-6 text-[15px] font-medium text-white transition-all duration-300 hover:border-white/30 hover:bg-white/[0.04]"
-            >
-              <PlayCircle size={17} className="text-white/60 transition-colors duration-300 group-hover:text-neon" />
-              Watch 2-Minute Overview
-            </a>
+            <MagneticWrapper>
+              <a
+                href="/pricing"
+                data-cursor="hover"
+                className="electric-gradient group inline-flex min-h-[3.25rem] items-center gap-4 rounded-2xl py-1.5 pl-6 pr-1.5 shadow-[0_0_36px_rgba(61,123,255,0.35)] transition-all duration-300 hover:shadow-[0_0_52px_rgba(61,123,255,0.5)]"
+              >
+                <span className="text-[15px] font-semibold text-white">
+                  Book Demo
+                </span>
+                <span className="flex h-10 w-10 items-center justify-center rounded-[0.8rem] bg-holo text-neon transition-transform duration-300 group-hover:rotate-45">
+                  <ArrowUpRight size={17} />
+                </span>
+              </a>
+            </MagneticWrapper>
+
+            <MagneticWrapper>
+              <a
+                href="/product"
+                data-cursor="hover"
+                className="group relative inline-flex min-h-[3.25rem] items-center rounded-2xl p-[1.25px] overflow-hidden transition-all duration-300 hover:scale-[1.03] hover:shadow-[0_0_36px_rgba(61,123,255,0.25)]"
+              >
+                {/* Border Gradient Background */}
+                <div className="absolute inset-0 bg-gradient-to-r from-[#3d7bff] to-[#35d6ff] transition-opacity duration-300 opacity-80 group-hover:opacity-100" />
+                {/* Inner Button Content Mask */}
+                <div className="relative z-10 flex min-h-[calc(3.25rem-2.5px)] items-center gap-3 rounded-[15px] bg-[#050505] py-[0.6rem] px-[1.725rem] text-[15px] font-medium text-white transition-colors duration-300 group-hover:bg-[#0d0d0d]/80">
+                  <ArrowRight size={17} className="text-white/60 transition-colors duration-300 group-hover:text-neon" />
+                  <span>Get Started Now</span>
+                </div>
+              </a>
+            </MagneticWrapper>
           </motion.div>
-        </div>
-
-        {/* Bottom row: social proof + scroll hint */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 1.2, delay: 2.6 }}
-          className="relative z-10 mt-auto flex items-end justify-between pt-16"
-        >
-          <div>
-            <div className="flex items-center gap-4">
-              <div className="flex -space-x-2.5">
-                {AVATARS.map(([a, b], i) => (
-                  <span
-                    key={i}
-                    className="h-9 w-9 rounded-full border-2 border-holo"
-                    style={{
-                      background: `radial-gradient(circle at 35% 30%, ${a}, ${b})`,
-                    }}
-                  />
-                ))}
-              </div>
-              <span className="font-display text-2xl font-medium tracking-tight text-white sm:text-3xl">
-                Every document.
-              </span>
-            </div>
-            <p className="mt-3 max-w-[14rem] text-[13px] leading-relaxed text-white/55">
-              Built to connect everything your organization has ever written
-              — no exceptions.
-            </p>
-          </div>
-
-          <a
-            href="#problem"
-            data-cursor="hover"
-            className="hidden items-center gap-2 text-[13px] text-white/50 transition-colors duration-300 hover:text-white sm:inline-flex"
-          >
-            Scroll to explore
-            <motion.span
-              animate={{ y: [0, 4, 0] }}
-              transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
-            >
-              <ArrowDown size={14} />
-            </motion.span>
-          </a>
         </motion.div>
       </div>
     </section>

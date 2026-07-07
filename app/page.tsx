@@ -1,20 +1,22 @@
 import { CustomCursor } from "@/components/chrome/CustomCursor";
-import { Footer } from "@/components/chrome/Footer";
 import { Navbar } from "@/components/chrome/Navbar";
 import { Preloader } from "@/components/chrome/Preloader";
 import { ScrollProgress } from "@/components/chrome/ScrollProgress";
 import { SmoothScroll } from "@/components/chrome/SmoothScroll";
-import { Comparison } from "@/components/sections/Comparison";
-import { Dashboard } from "@/components/sections/Dashboard";
-import { FinalCTA } from "@/components/sections/FinalCTA";
 import { Hero } from "@/components/sections/Hero";
-import { HowItWorks } from "@/components/sections/HowItWorks";
-import { Integrations } from "@/components/sections/Integrations";
-import { KnowledgeGraphSection } from "@/components/sections/KnowledgeGraphSection";
+import { TrustedBy } from "@/components/sections/TrustedBy";
 import { Problem } from "@/components/sections/Problem";
-import { SearchExperience } from "@/components/sections/SearchExperience";
+import { Solution } from "@/components/sections/Solution";
+import { LiveDemo } from "@/components/sections/LiveDemo";
+import { HowItWorks } from "@/components/sections/HowItWorks";
+import { KnowledgeGraphSection } from "@/components/sections/KnowledgeGraphSection";
+import { WhyDifferent } from "@/components/sections/WhyDifferent";
+import { Integrations } from "@/components/sections/Integrations";
 import { Security } from "@/components/sections/Security";
-import { Testimonials } from "@/components/sections/Testimonials";
+import { CustomerStories } from "@/components/sections/CustomerStories";
+import { FAQ } from "@/components/sections/FAQ";
+import { ClosingCTA } from "@/components/sections/ClosingCTA";
+import { UpdatedFooter } from "@/components/sections/UpdatedFooter";
 
 export default function Home() {
   return (
@@ -25,18 +27,20 @@ export default function Home() {
       <Navbar />
       <main className="relative noise">
         <Hero />
+        <TrustedBy />
         <Problem />
+        <Solution />
+        <LiveDemo />
         <HowItWorks />
         <KnowledgeGraphSection />
-        <SearchExperience />
-        <Dashboard />
-        <Security />
+        <WhyDifferent />
         <Integrations />
-        <Comparison />
-        <Testimonials />
-        <FinalCTA />
+        <Security />
+        <CustomerStories />
+        <FAQ />
+        <ClosingCTA />
       </main>
-      <Footer />
+      <UpdatedFooter />
     </SmoothScroll>
   );
 }
