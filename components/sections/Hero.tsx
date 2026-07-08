@@ -203,23 +203,14 @@ export function Hero() {
           <KnowledgeSphere />
         </motion.div>
 
-        {/* Floating stat cards over the orb with individual parallax offsets */}
+        {/* Floating stat card over the orb with individual parallax offset */}
         <StatCard
           icon={<BarChart3 size={16} />}
           tag="Modeled impact"
           value="-75%"
-          label="Avg. Time Searching for Answers"
-          className="right-4 top-[18%] hidden sm:right-10 md:block lg:right-16"
+          label="Avg. time searching, saving 2.3h per employee weekly."
+          className="bottom-[14%] right-[4%] hidden sm:block md:block lg:right-[6%]"
           delay={2.7}
-          scrollTransform={card1Y}
-        />
-        <StatCard
-          icon={<Zap size={16} />}
-          tag="Modeled impact"
-          value="+2.3h"
-          label="Saved Per Employee, Every Week"
-          className="bottom-[16%] right-[34%] hidden md:block lg:right-[36%]"
-          delay={2.9}
           scrollTransform={card2Y}
         />
 
