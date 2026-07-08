@@ -4,7 +4,6 @@ import { Preloader } from "@/components/chrome/Preloader";
 import { ScrollProgress } from "@/components/chrome/ScrollProgress";
 import { SmoothScroll } from "@/components/chrome/SmoothScroll";
 import { Hero } from "@/components/sections/Hero";
-import { TrustedBy } from "@/components/sections/TrustedBy";
 import { Problem } from "@/components/sections/Problem";
 import { Solution } from "@/components/sections/Solution";
 import { LiveDemo } from "@/components/sections/LiveDemo";
@@ -29,7 +28,6 @@ export default function Home() {
         {/* Global Tailwind-style background mesh grid */}
         <div className="absolute inset-0 tailwind-grid opacity-30" style={{ maskImage: "none", WebkitMaskImage: "none" }} />
         <Hero />
-        <TrustedBy />
         <Problem />
         <Solution />
         <LiveDemo />
