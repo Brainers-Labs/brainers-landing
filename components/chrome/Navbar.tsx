@@ -2,7 +2,7 @@
 
 import { motion, useScroll, useMotionValueEvent, AnimatePresence } from "framer-motion";
 import { Plus, Menu, X } from "lucide-react";
-import { useState, useRef } from "react";
+import { useState, useRef, Fragment } from "react";
 import { usePathname } from "next/navigation";
 import { BrainMark } from "../ui/BrainMark";
 
@@ -50,19 +50,13 @@ export function Navbar() {
         animate={hidden && !mobileMenuOpen ? "hidden" : "visible"}
         transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
         initial={{ y: -80, opacity: 0 }}
-        className={`fixed inset-x-0 top-0 z-[80] transition-all duration-300 ${
-          floating
-            ? "border-b border-white/5 bg-[#05070a]/75 backdrop-blur-lg py-3.5 px-6 lg:px-10"
-            : "px-4 pt-4 sm:px-6 sm:pt-5 lg:px-10"
-        }`}
+        className="fixed inset-x-0 top-0 z-[80] px-4 pt-4 sm:px-6 sm:pt-5 lg:px-10"
       >
         <nav
-          className={`mx-auto flex w-full max-w-7xl items-center justify-between transition-all duration-500 ${
-            floating
-              ? "border border-transparent bg-transparent shadow-none"
-              : mobileMenuOpen
-              ? "border border-white/10 bg-holo/85 shadow-[0_8px_40px_rgba(0,0,0,0.45)] backdrop-blur-xl rounded-2xl px-4 py-2.5 sm:px-5"
-              : "border border-transparent rounded-2xl px-4 py-2.5 sm:px-5"
+          className={`mx-auto flex w-full max-w-7xl items-center justify-between rounded-2xl px-4 py-2.5 transition-all duration-500 sm:px-5 ${
+            floating || mobileMenuOpen
+              ? "border border-white/10 bg-holo/85 shadow-[0_8px_40px_rgba(0,0,0,0.45)] backdrop-blur-xl"
+              : "border border-transparent"
           }`}
           aria-label="Main Navigation"
         >
@@ -78,31 +72,35 @@ export function Navbar() {
           <div className="flex items-center gap-3">
             {/* Desktop Navigation Links */}
             <div 
-              className="relative hidden items-center gap-1 rounded-xl bg-white/[0.04] p-1.5 md:flex"
+              className="relative hidden items-center gap-1.5 rounded-xl bg-white/[0.04] p-1.5 md:flex"
               onMouseLeave={() => setHoveredIdx(null)}
             >
               {LINKS.map((link, idx) => {
                 const isActive = pathname === link.href;
                 return (
-                  <a
-                    key={link.href}
-                    href={link.href}
-                    data-cursor="hover"
-                    onMouseEnter={() => setHoveredIdx(idx)}
-                    className={`relative rounded-lg px-4 py-2 text-sm font-medium transition-colors duration-300 ${
-                      isActive ? "text-[#35d6ff]" : "text-white/80 hover:text-white"
-                    }`}
-                  >
-                    {/* Hover sliding pill */}
-                    {hoveredIdx === idx && (
-                      <motion.div
-                        layoutId="nav-hover-pill"
-                        className="absolute inset-0 z-0 rounded-lg border border-white/5 bg-white/[0.05]"
-                        transition={{ type: "spring", stiffness: 380, damping: 30 }}
-                      />
+                  <Fragment key={link.href}>
+                    <a
+                      href={link.href}
+                      data-cursor="hover"
+                      onMouseEnter={() => setHoveredIdx(idx)}
+                      className={`relative rounded-lg px-4 py-2 text-sm font-medium transition-colors duration-300 ${
+                        isActive ? "text-[#35d6ff]" : "text-white/80 hover:text-white"
+                      }`}
+                    >
+                      {/* Hover sliding pill */}
+                      {hoveredIdx === idx && (
+                        <motion.div
+                          layoutId="nav-hover-pill"
+                          className="absolute inset-0 z-0 rounded-lg border border-white/5 bg-white/[0.05]"
+                          transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                        />
+                      )}
+                      <span className="relative z-10">{link.label}</span>
+                    </a>
+                    {idx < LINKS.length - 1 && (
+                      <div className="h-3.5 w-px bg-gradient-to-b from-white/10 via-white/45 to-white/10 self-center" />
                     )}
-                    <span className="relative z-10">{link.label}</span>
-                  </a>
+                  </Fragment>
                 );
               })}
             </div>
