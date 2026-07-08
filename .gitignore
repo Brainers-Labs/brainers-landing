@@ -45,3 +45,6 @@ next-env.d.ts
 
 # screen recordings
 *.mov
+
+# sample site files
+/sample-site
