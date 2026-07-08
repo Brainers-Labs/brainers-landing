@@ -311,30 +311,32 @@ export function Hero() {
               </a>
             </MagneticWrapper>
           </motion.div>
-        </motion.div>
 
-        {/* desaturated silver/grey partner logos at the bottom of the Hero */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 1, delay: 2.7 }}
-          className="relative z-10 mt-24 border-t border-white/5 pt-8 w-full"
-        >
-          <span className="text-[9px] font-bold uppercase tracking-[0.25em] text-text-muted/80">
-            INTEGRATES SECURELY WITH YOUR ENTERPRISE STACK
-          </span>
-          <div className="mt-5 flex flex-wrap items-center gap-x-12 gap-y-6 text-white/30">
-            {PARTNER_LOGOS.map((logo) => (
-              <div
-                key={logo.name}
-                className="transition-colors duration-300 hover:text-white/70 flex items-center"
-                data-cursor="hover"
-                title={logo.name}
-              >
-                {logo.svg}
+          {/* desaturated silver/grey partner logos at the bottom of the narrative column */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 1, delay: 2.7 }}
+            className="relative z-10 mt-16 border-t border-white/5 pt-8 w-full"
+          >
+            <span className="text-[9px] font-bold uppercase tracking-[0.25em] text-text-muted/80">
+              INTEGRATES SECURELY WITH YOUR ENTERPRISE STACK
+            </span>
+            <div className="relative w-full overflow-hidden mt-6 [mask-image:linear-gradient(to_right,transparent,white_15%,white_85%,transparent)]">
+              <div className="flex w-max gap-16 py-2 animate-marquee whitespace-nowrap">
+                {[...PARTNER_LOGOS, ...PARTNER_LOGOS, ...PARTNER_LOGOS].map((logo, idx) => (
+                  <div
+                    key={`${logo.name}-${idx}`}
+                    className="flex items-center text-white/30 transition-colors duration-300 hover:text-white/70"
+                    data-cursor="hover"
+                    title={logo.name}
+                  >
+                    {logo.svg}
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
+            </div>
+          </motion.div>
         </motion.div>
       </div>
       {/* Drifting Background Glow Spheres */}
