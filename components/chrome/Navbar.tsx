@@ -72,7 +72,7 @@ export function Navbar() {
           <div className="flex items-center gap-3">
             {/* Desktop Navigation Links */}
             <div 
-              className="relative hidden items-center gap-1.5 rounded-xl bg-white/[0.04] p-1.5 md:flex"
+              className="relative hidden items-center gap-1.5 md:flex"
               onMouseLeave={() => setHoveredIdx(null)}
             >
               {LINKS.map((link, idx) => {
@@ -91,7 +91,7 @@ export function Navbar() {
                       {hoveredIdx === idx && (
                         <motion.div
                           layoutId="nav-hover-pill"
-                          className="absolute inset-0 z-0 rounded-lg border border-white/5 bg-white/[0.05]"
+                          className="absolute inset-0 z-0 rounded-lg bg-white/[0.03]"
                           transition={{ type: "spring", stiffness: 380, damping: 30 }}
                         />
                       )}
