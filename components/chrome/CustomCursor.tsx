@@ -11,6 +11,7 @@ import { useEffect, useState } from "react";
 export function CustomCursor() {
   const [enabled, setEnabled] = useState(false);
   const [hovering, setHovering] = useState(false);
+  const [overLight, setOverLight] = useState(false);
 
   const x = useMotionValue(-100);
   const y = useMotionValue(-100);
@@ -32,6 +33,7 @@ export function CustomCursor() {
       setHovering(
         Boolean(target?.closest('[data-cursor="hover"], a, button, [role="button"]')),
       );
+      setOverLight(Boolean(target?.closest('[data-bg="light"]')));
     };
     window.addEventListener("mousemove", move, { passive: true });
     return () => {
@@ -46,8 +48,12 @@ export function CustomCursor() {
     <>
       <motion.div
         aria-hidden
-        className="pointer-events-none fixed left-0 top-0 z-[100] h-1.5 w-1.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-white"
-        style={{ x, y }}
+        className="pointer-events-none fixed left-0 top-0 z-[100] h-1.5 w-1.5 -translate-x-1/2 -translate-y-1/2 rounded-full"
+        style={{
+          x,
+          y,
+          backgroundColor: overLight ? "#000" : "#fff",
+        }}
       />
       <motion.div
         aria-hidden
@@ -57,8 +63,20 @@ export function CustomCursor() {
           y: ringY,
           width: hovering ? 52 : 30,
           height: hovering ? 52 : 30,
-          borderColor: hovering ? "rgba(59,130,246,0.9)" : "rgba(255,255,255,0.35)",
-          backgroundColor: hovering ? "rgba(59,130,246,0.08)" : "transparent",
+          borderColor: overLight
+            ? hovering
+              ? "rgba(0,0,0,0.9)"
+              : "rgba(0,0,0,0.35)"
+            : hovering
+              ? "rgba(59,130,246,0.9)"
+              : "rgba(255,255,255,0.35)",
+          backgroundColor: overLight
+            ? hovering
+              ? "rgba(0,0,0,0.08)"
+              : "transparent"
+            : hovering
+              ? "rgba(59,130,246,0.08)"
+              : "transparent",
         }}
       />
     </>

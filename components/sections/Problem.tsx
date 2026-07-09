@@ -158,6 +158,7 @@ export function Problem() {
   return (
     <section
       ref={containerRef}
+      data-bg="light"
       className="relative min-h-screen overflow-hidden bg-[#f3f4f6]"
     >
       <motion.div
