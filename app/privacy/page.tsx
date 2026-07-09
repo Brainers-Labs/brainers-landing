@@ -46,14 +46,14 @@ export default function PrivacyPage() {
             <section className="space-y-3">
               <h2 className="text-lg font-semibold text-white">3. Data Security & Isolation</h2>
               <p>
-                We implement bank-grade encryption in transit (TLS 1.3) and at rest (AES-256). All customer data is stored in isolated multi-tenant structures. Your company's knowledge graph and brain are strictly yours and are never shared or used to train public models.
+                We implement bank-grade encryption in transit (TLS 1.3) and at rest (AES-256). All customer data is stored in isolated multi-tenant structures. Your company&apos;s knowledge graph and brain are strictly yours and are never shared or used to train public models.
               </p>
             </section>
 
             <section className="space-y-3">
               <h2 className="text-lg font-semibold text-white">4. Your Rights</h2>
               <p>
-                Depending on your jurisdiction, you may have rights to access, rectify, or erase personal data processed in our systems. Since we process data on behalf of our corporate clients, individual requests should be directed to your organization's IT administrator first.
+                Depending on your jurisdiction, you may have rights to access, rectify, or erase personal data processed in our systems. Since we process data on behalf of our corporate clients, individual requests should be directed to your organization&apos;s IT administrator first.
               </p>
             </section>
 

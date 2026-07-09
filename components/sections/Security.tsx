@@ -6,7 +6,6 @@ import { Fingerprint, KeyRound, Landmark, Lock, Unlock, ScrollText, Server, Chec
 import { SectionHeading } from "../ui/SectionHeading";
 import { Reveal, Stagger, StaggerItem } from "../ui/Reveal";
 
-const EASE = [0.22, 1, 0.36, 1] as const;
 
 const PILLARS = [
   {
@@ -99,7 +98,6 @@ function VaultConsole() {
               scale: isLocked ? [1, 1.08, 1] : [1, 1.15, 0.95, 1],
               rotate: isLocked ? 0 : [0, -20, 20, 0],
             }}
-            // @ts-ignore
             transition={{ duration: 0.5, ease: "easeInOut" }}
           >
             {isLocked ? (
@@ -220,7 +218,7 @@ export function Security() {
           </Reveal>
 
           <Stagger className="grid gap-4 sm:grid-cols-2">
-            {PILLARS.map((p, idx) => (
+            {PILLARS.map((p) => (
               <SecurityCard key={p.title} pillar={p} />
             ))}
           </Stagger>

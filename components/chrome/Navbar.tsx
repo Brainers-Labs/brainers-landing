@@ -1,17 +1,17 @@
 "use client";
 
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { motion, useScroll, useMotionValueEvent, AnimatePresence } from "framer-motion";
 import { Plus, Menu, X } from "lucide-react";
 import { useState, useRef, Fragment } from "react";
-import { usePathname } from "next/navigation";
 import { BrainMark } from "../ui/BrainMark";
 
 const LINKS = [
-  { label: "Product", href: "/product" },
-  { label: "Integrations", href: "/integrations" },
-  { label: "Security", href: "/security" },
-  { label: "Pricing", href: "/pricing" },
-  { label: "Docs", href: "/docs" },
+  { label: "Product", href: "#how-it-works" },
+  { label: "Intelligence", href: "#knowledge-graph" },
+  { label: "Security", href: "#security" },
+  { label: "Integrations", href: "#integrations" },
 ];
 
 export function Navbar() {
@@ -61,12 +61,12 @@ export function Navbar() {
           aria-label="Main Navigation"
         >
           {/* Logo Brand */}
-          <a href="/" className="flex items-center gap-3" data-cursor="hover">
+          <Link href="/" className="flex items-center gap-3" data-cursor="hover">
             <BrainMark size={36} />
             <span className="font-display text-[17px] font-semibold tracking-tight text-white">
               BrainersOS
             </span>
-          </a>
+          </Link>
 
           {/* Desktop Nav Actions */}
           <div className="flex items-center gap-3">
@@ -106,8 +106,8 @@ export function Navbar() {
             </div>
 
             {/* Request Demo Button (CTA) */}
-            <a
-              href="/#cta"
+            <Link
+              href="#cta"
               data-cursor="hover"
               className="electric-gradient group hidden items-center gap-3 rounded-xl py-1.5 pl-1.5 pr-5 shadow-[0_0_28px_rgba(61,123,255,0.3)] transition-all duration-300 hover:scale-[1.03] hover:shadow-[0_0_40px_rgba(61,123,255,0.45)] sm:flex"
             >
@@ -115,7 +115,7 @@ export function Navbar() {
                 <Plus size={15} />
               </span>
               <span className="text-sm font-semibold text-white">Request Demo</span>
-            </a>
+            </Link>
 
             {/* Mobile Menu Button */}
             <button
@@ -162,14 +162,14 @@ export function Navbar() {
                 
                 <div className="my-2 h-px bg-white/10" />
 
-                <a
-                  href="/#cta"
+                <Link
+                  href="#cta"
                   onClick={() => setMobileMenuOpen(false)}
                   className="electric-gradient flex items-center justify-center gap-3 rounded-xl py-3 shadow-[0_0_24px_rgba(61,123,255,0.25)]"
                 >
                   <Plus size={16} className="text-neon" />
                   <span className="text-sm font-semibold text-white">Request Demo</span>
-                </a>
+                </Link>
               </div>
             </motion.div>
           )}

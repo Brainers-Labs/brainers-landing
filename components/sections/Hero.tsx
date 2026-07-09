@@ -1,7 +1,7 @@
 "use client";
 
-import { motion, useScroll, useTransform, useMotionValue, useSpring } from "framer-motion";
-import { ArrowRight, ArrowUpRight, BarChart3, Zap } from "lucide-react";
+import { motion, useScroll, useTransform, useMotionValue, useSpring, type MotionValue } from "framer-motion";
+import { ArrowRight, ArrowUpRight, BarChart3 } from "lucide-react";
 import { useState, useRef } from "react";
 import dynamic from "next/dynamic";
 
@@ -29,7 +29,7 @@ function StatCard({
   label: string;
   className: string;
   delay: number;
-  scrollTransform?: any;
+  scrollTransform?: MotionValue<number>;
 }) {
   const [coords, setCoords] = useState({ x: 0, y: 0 });
   const [hovered, setHovered] = useState(false);
@@ -182,9 +182,28 @@ export function Hero() {
 
   // Scroll transforms for parallax depth
   const orbY = useTransform(scrollY, [0, 800], [0, 160]);
-  const card1Y = useTransform(scrollY, [0, 800], [0, -60]);
   const card2Y = useTransform(scrollY, [0, 800], [0, -100]);
   const textY = useTransform(scrollY, [0, 800], [0, 45]);
+
+  // Mouse parallax for background image
+  const bgX = useMotionValue(0);
+  const bgY = useMotionValue(0);
+  const springBgX = useSpring(bgX, { stiffness: 40, damping: 25 });
+  const springBgY = useSpring(bgY, { stiffness: 40, damping: 25 });
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    const rect = containerRef.current?.getBoundingClientRect();
+    if (!rect) return;
+    const x = (e.clientX - rect.left) / rect.width;
+    const y = (e.clientY - rect.top) / rect.height;
+    bgX.set((x - 0.5) * 24);
+    bgY.set((y - 0.5) * 16);
+  };
+
+  const handleMouseLeave = () => {
+    bgX.set(0);
+    bgY.set(0);
+  };
 
   const lineVariants = {
     hidden: { y: "100%" },
@@ -192,7 +211,24 @@ export function Hero() {
   };
 
   return (
-    <section ref={containerRef} className="relative overflow-hidden bg-holo">
+    <section
+      ref={containerRef}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      className="relative overflow-hidden"
+    >
+      <motion.div
+        className="absolute inset-0 bg-cover bg-center"
+        style={{
+          backgroundImage: "url(/hero.jpg)",
+          x: springBgX,
+          y: springBgY,
+        }}
+        initial={{ scale: 1.1 }}
+        animate={{ scale: 1 }}
+        transition={{ duration: 20, ease: "easeOut" }}
+      />
+      <div className="absolute inset-0 bg-gradient-to-b from-holo/92 via-holo/88 to-holo/92" />
       <div className="relative mx-auto flex min-h-svh max-w-7xl flex-col justify-center px-6 pb-12 pt-28 lg:px-10">
         {/* 3D glass orb — right side with parallax */}
         <motion.div
@@ -200,19 +236,19 @@ export function Hero() {
           className="pointer-events-none absolute inset-y-0 right-[-14%] w-[80%] opacity-60 sm:opacity-100 lg:right-[-4%] lg:w-[54%]"
         >
           <div className="absolute inset-[6%] rounded-full bg-[radial-gradient(circle,rgba(61,123,255,0.16),rgba(21,30,71,0.14)_45%,transparent_65%)]" />
-          <KnowledgeSphere />
+          <div className="relative w-full h-full">
+            <KnowledgeSphere />
+            <StatCard
+              icon={<BarChart3 size={16} />}
+              tag="Modeled impact"
+              value="-75%"
+              label="Avg. time searching, saving 2.3h per employee weekly."
+              className="absolute z-20 pointer-events-auto right-[5%] bottom-[19%]"
+              delay={2.7}
+              scrollTransform={card2Y}
+            />
+          </div>
         </motion.div>
-
-        {/* Floating stat card over the orb with individual parallax offset */}
-        <StatCard
-          icon={<BarChart3 size={16} />}
-          tag="Modeled impact"
-          value="-75%"
-          label="Avg. time searching, saving 2.3h per employee weekly."
-          className="bottom-[14%] right-[4%] hidden sm:block md:block lg:right-[6%]"
-          delay={2.7}
-          scrollTransform={card2Y}
-        />
 
         {/* Left column (Narrative) */}
         <motion.div style={{ y: textY }} className="relative z-10 max-w-2xl lg:pr-16">
@@ -242,7 +278,7 @@ export function Hero() {
             </span>
             <span className="relative block overflow-hidden mt-1 sm:mt-2">
               <motion.span
-                className="block bg-gradient-to-r from-[#3d7bff] to-[#35d6ff] bg-clip-text text-transparent whitespace-nowrap"
+                className="block text-white whitespace-nowrap"
                 initial="hidden"
                 animate="visible"
                 variants={lineVariants}

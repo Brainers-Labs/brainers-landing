@@ -4,7 +4,7 @@ type SectionHeadingProps = {
   eyebrow: string;
   title: string;
   subtitle?: string;
-  align?: "center" | "left";
+  align?: "center" | "left" | "right";
 };
 
 export function SectionHeading({
@@ -13,7 +13,7 @@ export function SectionHeading({
   subtitle,
   align = "center",
 }: SectionHeadingProps) {
-  const alignCls = align === "center" ? "items-center text-center" : "items-start text-left";
+  const alignCls = align === "center" ? "items-center text-center" : align === "right" ? "items-end text-right" : "items-start text-left";
   return (
     <div className={`flex flex-col gap-5 ${alignCls}`}>
       <Reveal>

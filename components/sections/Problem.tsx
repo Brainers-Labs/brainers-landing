@@ -1,503 +1,175 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import {
-  motion,
-  useInView,
-  useReducedMotion,
-  animate as motionAnimate,
-} from "framer-motion";
-import {
-  FileX,
-  Telescope,
-  GitBranch,
-  UserX,
-  Scale,
-  Search,
-} from "lucide-react";
-import { Reveal, Stagger, StaggerItem } from "../ui/Reveal";
+import { useRef, useState } from "react";
+import { motion, useScroll, useTransform } from "framer-motion";
+import { LivingKnowledgeNetwork } from "../living-network/LivingKnowledgeNetwork";
+import { GitMerge, Database, Search, RefreshCw, Shield, Plus } from "lucide-react";
 
 const EASE = [0.22, 1, 0.36, 1] as const;
 
-type ToolNode = {
-  label: string;
-  color: string;
-  x: number;
-  y: number;
-  drift: number;
-  duration: number;
-  svg: React.ReactNode;
-};
 
-// Custom brand SVGs for the drifting islands
-const SlackIcon = () => (
-  <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none">
-    <path d="M5.042 15.165a2.528 2.528 0 0 1-2.52 2.523 2.528 2.528 0 0 1-2.522-2.523 2.528 2.528 0 0 1 2.522-2.52h2.52v2.52zM6.305 15.165a2.528 2.528 0 0 1 2.52-2.52h5.043a2.528 2.528 0 0 1 2.522 2.52v5.043a2.528 2.528 0 0 1-2.522 2.52H8.825a2.528 2.528 0 0 1-2.52-2.52v-5.043z" fill="#E01E5A" />
-    <path d="M8.825 5.043a2.528 2.528 0 0 1 2.52-2.52 2.528 2.528 0 0 1 2.522 2.52v2.52h-2.522a2.528 2.528 0 0 1-2.52-2.52zM8.825 6.305a2.528 2.528 0 0 1 2.52 2.52v5.043a2.528 2.528 0 0 1-2.52 2.522H3.782a2.528 2.528 0 0 1-2.52-2.522 2.528 2.528 0 0 1 2.52-2.52h5.043z" fill="#36C5F0" />
-    <path d="M18.958 8.825a2.528 2.528 0 0 1 2.52-2.52 2.528 2.528 0 0 1 2.522 2.52 2.528 2.528 0 0 1-2.522 2.52h-2.52v-2.52zM17.695 8.825a2.528 2.528 0 0 1-2.52 2.52h-5.043a2.528 2.528 0 0 1-2.522-2.52V3.782a2.528 2.528 0 0 1 2.522-2.52h5.043a2.528 2.528 0 0 1 2.52 2.52v5.043z" fill="#2EB67D" />
-    <path d="M15.175 18.958a2.528 2.528 0 0 1-2.52 2.52 2.528 2.528 0 0 1-2.522-2.52v-2.52h2.522a2.528 2.528 0 0 1 2.52 2.52zM15.175 17.695a2.528 2.528 0 0 1-2.52-2.52v-5.043a2.528 2.528 0 0 1 2.52-2.522h5.043a2.528 2.528 0 0 1 2.52 2.522 2.528 2.528 0 0 1-2.52 2.52h-5.043z" fill="#ECB22E" />
-  </svg>
-);
 
-const NotionIcon = () => (
-  <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none">
-    <path fillRule="evenodd" clipRule="evenodd" d="M4 3h16a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1zm3 4h2.5v1.2l3 3.3V7h2.5v10h-2.5v-1.2l-3-3.3V17H7V7z" fill="#FFFFFF" />
-  </svg>
-);
-
-const DriveIcon = () => (
-  <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none">
-    <path d="M19.43 12.98L13 1.86C12.61 1.18 11.9 1.18 11.51 1.86L5.08 12.98C4.69 13.66 5.05 14.22 5.83 14.22H18.68c.78 0 1.14-.56.75-1.24z" fill="#4285F4" />
-    <path d="M9.43 14.98L3 3.86C2.61 3.18 1.9 3.18 1.51 3.86L.08 14.98C-.31 15.66.05 16.22.83 16.22h12.85c.78 0 1.14-.56.75-1.24z" fill="#34A853" />
-    <path d="M14.43 20.98L8 9.86C7.61 9.18 6.9 9.18 6.51 9.86L5.08 20.98C4.69 21.66 5.05 22.22 5.83 22.22h12.85c.78 0 1.14-.56.75-1.24z" fill="#FBBC05" />
-  </svg>
-);
-
-const GitHubIcon = () => (
-  <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none">
-    <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12" fill="#B8C2D1" />
-  </svg>
-);
-
-const JiraIcon = () => (
-  <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none">
-    <path d="M11.53 2.3a1.67 1.67 0 0 1 2.94 0l8.03 14.1a1.67 1.67 0 0 1-1.47 2.5H2.97a1.67 1.67 0 0 1-1.47-2.5z" fill="#2684FF" />
-  </svg>
-);
-
-const MailIcon = () => (
-  <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none">
-    <rect width="24" height="24" rx="6" fill="#EA4335" />
-    <path d="M5 7l7 5 7-5v10H5V7z" stroke="#FFFFFF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-  </svg>
-);
-
-const ZoomIcon = () => (
-  <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none">
-    <rect width="24" height="24" rx="6" fill="#7C5CFC" />
-    <path d="M7 10h6v4H7zm7 1l3-2.2v6.4L14 13z" fill="#FFFFFF" />
-  </svg>
-);
-
-const DbIcon = () => (
-  <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none">
-    <rect width="24" height="24" rx="6" fill="#3B82F6" />
-    <ellipse cx="12" cy="7" rx="5" ry="2" fill="#FFFFFF" />
-    <path d="M7 7v4c0 1.1 2.2 2 5 2s5-.9 5-2V7" stroke="#FFFFFF" strokeWidth="1.5" />
-    <path d="M7 12v4c0 1.1 2.2 2 5 2s5-.9 5-2v-4" stroke="#FFFFFF" strokeWidth="1.5" />
-  </svg>
-);
-
-const TOOLS: ToolNode[] = [
-  { label: "Slack", color: "#E01E5A", x: 10, y: 24, drift: -7, duration: 7.5, svg: <SlackIcon /> },
-  { label: "Notion", color: "#FFFFFF", x: 31, y: 8, drift: 6, duration: 9, svg: <NotionIcon /> },
-  { label: "Google Drive", color: "#4285F4", x: 60, y: 11, drift: -5, duration: 8, svg: <DriveIcon /> },
-  { label: "GitHub", color: "#B8C2D1", x: 86, y: 22, drift: 8, duration: 10, svg: <GitHubIcon /> },
-  { label: "Jira", color: "#2684FF", x: 8, y: 70, drift: 6, duration: 8.5, svg: <JiraIcon /> },
-  { label: "Emails", color: "#EA4335", x: 33, y: 86, drift: -6, duration: 9.5, svg: <MailIcon /> },
-  { label: "Meetings", color: "#7C5CFC", x: 63, y: 82, drift: 7, duration: 7, svg: <ZoomIcon /> },
-  { label: "Databases", color: "#3B82F6", x: 88, y: 66, drift: -8, duration: 10.5, svg: <DbIcon /> },
+const SOLUTION_STEPS = [
+  {
+    number: "01",
+    title: "One Neural Fabric",
+    description: "BrainersOS weaves your tools, documents, and conversations into a single, queryable intelligence layer. Nothing is lost. Everything connects.",
+    icon: GitMerge,
+  },
+  {
+    number: "02",
+    title: "Memory That Persists",
+    description: "Institutional knowledge doesn\u2019t walk out the door. Every decision, policy, and insight is captured and contextualized \u2014 forever.",
+    icon: Database,
+  },
+  {
+    number: "03",
+    title: "Answers, Not Searches",
+    description: "Stop hunting across 8 apps. Ask in plain English and get a synthesized answer drawn from your entire ecosystem \u2014 in seconds.",
+    icon: Search,
+  },
+  {
+    number: "04",
+    title: "Always Current",
+    description: "Every source updates in real-time. Your intelligence layer never goes stale with continuous indexing and live syncing.",
+    icon: RefreshCw,
+  },
+  {
+    number: "05",
+    title: "Enterprise Guardrails",
+    description: "Role-based access, audit trails, and compliance controls built into every query. Your data stays secure and governed.",
+    icon: Shield,
+  },
 ];
 
-const CENTER = { x: 50, y: 47 };
-
-const CONSEQUENCES = [
-  { icon: FileX, label: "Duplicated work", detail: "Same problem, solved twice" },
-  { icon: Telescope, label: "Knowledge loss", detail: "Expertise leaves with people" },
-  { icon: GitBranch, label: "Inconsistent decisions", detail: "Teams act on different facts" },
-  { icon: UserX, label: "Slow onboarding", detail: "Months to find context" },
-  { icon: Scale, label: "Compliance risks", detail: "No single source of truth" },
-];
-
-function StatCounter({ target, suffix }: { target: number; suffix: string }) {
-  const ref = useRef<HTMLSpanElement>(null);
-  const inView = useInView(ref, { once: true, margin: "-15% 0px" });
-  const reduce = useReducedMotion();
-  const [value, setValue] = useState(0);
-
-  useEffect(() => {
-    if (!inView) return;
-    if (reduce) {
-      setValue(target);
-      return;
-    }
-    const controls = motionAnimate(0, target, {
-      duration: 1.8,
-      ease: [0.22, 1, 0.36, 1],
-      onUpdate: (v) => setValue(Math.round(v)),
-    });
-    return () => controls.stop();
-  }, [inView, target, reduce]);
-
-  return (
-    <span ref={ref} className="tabular-nums">
-      {value}
-      {suffix}
-    </span>
-  );
-}
-
-function SeveredLine({
-  from,
-  to,
-  index,
-  reduce,
-  isHovered,
-  color,
-}: {
-  from: { x: number; y: number };
-  to: { x: number; y: number };
-  index: number;
-  reduce: boolean | null;
-  isHovered: boolean;
-  color: string;
-}) {
-  const breakT = 0.62;
-  const bx = from.x + (to.x - from.x) * breakT;
-  const by = from.y + (to.y - from.y) * breakT;
-
-  const gradId = `sever-${index}`;
-
-  return (
-    <g>
-      <defs>
-        <linearGradient
-          id={gradId}
-          gradientUnits="userSpaceOnUse"
-          x1={from.x}
-          y1={from.y}
-          x2={to.x}
-          y2={to.y}
-        >
-          {isHovered ? (
-            <>
-              <stop offset="0%" stopColor={color} stopOpacity={1} />
-              <stop offset="100%" stopColor={color} stopOpacity={0.8} />
-            </>
-          ) : (
-            <>
-              <stop offset="0%" stopColor="rgba(255,255,255,0.18)" />
-              <stop offset="35%" stopColor="rgba(255,255,255,0.06)" />
-              <stop offset="60%" stopColor="rgba(255,255,255,0)" />
-            </>
-          )}
-        </linearGradient>
-      </defs>
-
-      {/* Connection Line (Extends to hub, but fades out to transparent when not hovered) */}
-      <motion.line
-        x1={from.x}
-        y1={from.y}
-        x2={to.x}
-        y2={to.y}
-        stroke={`url(#${gradId})`}
-        strokeWidth={isHovered ? 1.5 : 1}
-        strokeDasharray={isHovered ? "4 3" : "3 4"}
-        vectorEffect="non-scaling-stroke"
-        animate={reduce ? {} : {
-          strokeDashoffset: [0, isHovered ? -20 : -14],
-        }}
-        // @ts-ignore
-        transition={{
-          strokeDashoffset: {
-            duration: isHovered ? 1.6 : 2.8,
-            repeat: Infinity,
-            ease: "linear",
-          },
-        }}
-      />
-
-      {/* Outward Request Pulse & Red Bounce Back Signal (Looping visual story of query failure) */}
-      {!reduce && (
-        <>
-          {isHovered ? (
-            // Solid healthy connection flow towards the center hub
-            <motion.circle
-              r={1.5}
-              fill={color}
-              initial={{ cx: from.x, cy: from.y }}
-              animate={{
-                cx: [from.x, to.x],
-                cy: [from.y, to.y],
-              }}
-              transition={{
-                duration: 1.4,
-                repeat: Infinity,
-                ease: "easeInOut",
-              }}
-            />
-          ) : (
-            // Interrupted connection loop: white outward query turns to red warning upon hitting the red X, then returns
-            <motion.circle
-              r={1}
-              initial={{ cx: to.x, cy: to.y }}
-              animate={{
-                cx: [to.x, bx, to.x],
-                cy: [to.y, by, to.y],
-                fill: ["rgba(255,255,255,0.7)", "rgba(239,68,68,0.95)", "rgba(239,68,68,0.95)"],
-              }}
-              transition={{
-                duration: 2.8,
-                repeat: Infinity,
-                ease: "easeInOut",
-                delay: index * 0.22,
-              }}
-            />
-          )}
-        </>
-      )}
-
-      {/* Pulsing Red Star/Cross (Only when not hovered, flashes in sync with return bounce) */}
-      {!isHovered && (
-        <motion.g
-          animate={{
-            scale: [1, 1.28, 1],
-            opacity: [0.35, 0.95, 0.35],
-          }}
-          transition={{
-            duration: 2.8,
-            repeat: Infinity,
-            ease: "easeInOut",
-            delay: index * 0.22,
-          }}
-          style={{ transformOrigin: `${bx}px ${by}px` }}
-        >
-          <line
-            x1={bx - 1.1}
-            y1={by - 1.1}
-            x2={bx + 1.1}
-            y2={by + 1.1}
-            stroke="rgba(239,68,68,0.9)"
-            strokeWidth={1.2}
-            vectorEffect="non-scaling-stroke"
-            strokeLinecap="round"
-          />
-          <line
-            x1={bx + 1.1}
-            y1={by - 1.1}
-            x2={bx - 1.1}
-            y2={by + 1.1}
-            stroke="rgba(239,68,68,0.9)"
-            strokeWidth={1.2}
-            vectorEffect="non-scaling-stroke"
-            strokeLinecap="round"
-          />
-        </motion.g>
-      )}
-    </g>
-  );
-}
-
-function ScatterMap() {
-  const reduce = useReducedMotion();
-  const [hoveredTool, setHoveredTool] = useState<number | null>(null);
-
-  return (
-    <div className="relative mx-auto h-[380px] w-full max-w-2xl sm:h-[440px]">
-      {/* Ambient glow */}
-      <div className="pointer-events-none absolute left-1/2 top-1/2 h-80 w-80 -translate-x-1/2 -translate-y-1/2 rounded-full bg-accent/5 blur-[100px]" />
-
-      {/* Connection Lines */}
-      <svg
-        className="pointer-events-none absolute inset-0 h-full w-full"
-        viewBox="0 0 100 100"
-        preserveAspectRatio="none"
-        aria-hidden="true"
-      >
-        {TOOLS.map((t, i) => (
-          <SeveredLine
-            key={t.label}
-            from={{ x: t.x, y: t.y }}
-            to={CENTER}
-            index={i}
-            reduce={reduce}
-            isHovered={hoveredTool === i}
-            color={t.color}
-          />
-        ))}
-      </svg>
-
-      {/* Central query node */}
-      <div
-        className="absolute -translate-x-1/2 -translate-y-1/2"
-        style={{ left: `${CENTER.x}%`, top: `${CENTER.y}%` }}
-      >
-        {!reduce &&
-          [0, 1, 2].map((i) => (
-            <motion.div
-              key={i}
-              className="absolute left-1/2 top-1/2 h-20 w-20 -translate-x-1/2 -translate-y-1/2 rounded-full border border-red-500/25"
-              initial={{ scale: 0.3, opacity: 0 }}
-              animate={{ scale: 2.6, opacity: [0, 0.4, 0] }}
-              transition={{
-                duration: 3.2,
-                delay: i * 1.05,
-                repeat: Infinity,
-                ease: "easeOut",
-              }}
-            />
-          ))}
-
-        <motion.div
-          initial={{ opacity: 0, scale: 0.8 }}
-          whileInView={{ opacity: 1, scale: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8, delay: 0.4, ease: EASE }}
-          className="glass relative flex items-center gap-2.5 rounded-2xl border border-red-500/20 bg-red-500/[0.02] px-4 py-3 shadow-[0_0_40px_rgba(239,68,68,0.12)]"
-        >
-          <Search size={16} className="shrink-0 text-red-500 animate-pulse" />
-          <span className="whitespace-nowrap text-sm font-medium text-white/95">
-            Where is the answer?
-          </span>
-        </motion.div>
-      </div>
-
-      {/* Drifting tool islands (Upgraded to true custom SVG brand icons) */}
-      {TOOLS.map((tool, i) => (
-        <div
-          key={tool.label}
-          className="absolute -translate-x-1/2 -translate-y-1/2"
-          style={{ left: `${tool.x}%`, top: `${tool.y}%` }}
-        >
-          <motion.div
-            initial={{ opacity: 0, scale: 0.85, filter: "blur(6px)" }}
-            whileInView={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.7, delay: 0.15 + i * 0.09, ease: EASE }}
-          >
-            <motion.div
-              {...(!reduce && {
-                animate: { y: [0, tool.drift, 0], x: [0, tool.drift * -0.4, 0] },
-                transition: {
-                  duration: tool.duration,
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                },
-              })}
-              whileHover={{ scale: 1.08 }}
-              onMouseEnter={() => setHoveredTool(i)}
-              onMouseLeave={() => setHoveredTool(null)}
-              className="glass group relative flex h-11 w-11 items-center justify-center rounded-xl border border-edge transition-all duration-500 hover:border-white/20 hover:bg-white/[0.04] hover:shadow-[0_0_24px_rgba(255,255,255,0.06)]"
-              data-cursor="hover"
-            >
-              {/* Brand SVG container */}
-              <div className="relative z-10 flex h-full w-full items-center justify-center">
-                {tool.svg}
-              </div>
-
-              {/* Dynamic Aura background on hover */}
-              <div
-                className="absolute inset-0 rounded-xl opacity-0 transition-opacity duration-300 group-hover:opacity-10 pointer-events-none"
-                style={{ background: tool.color }}
-              />
-
-              {/* Tool Name tooltip */}
-              <span className="pointer-events-none absolute left-1/2 top-full mt-2 -translate-x-1/2 whitespace-nowrap rounded-md border border-edge bg-ink/90 px-2 py-1 text-[10px] text-text-secondary opacity-0 backdrop-blur transition-opacity duration-300 group-hover:opacity-100">
-                {tool.label}
-              </span>
-            </motion.div>
-          </motion.div>
-        </div>
-      ))}
-    </div>
-  );
-}
-
-function ConsequenceCard({
+function SolutionStep({
+  number,
+  title,
+  description,
   icon: Icon,
-  label,
-  detail,
-  index,
-  reduce,
+  isOpen,
+  onToggle,
 }: {
-  icon: typeof FileX;
-  label: string;
-  detail: string;
-  index: number;
-  reduce: boolean | null;
+  number: string;
+  title: string;
+  description: string;
+  icon: React.ComponentType<{ size?: number }>;
+  isOpen: boolean;
+  onToggle: () => void;
 }) {
-  const [coords, setCoords] = useState({ x: 0, y: 0 });
-  const [hovered, setHovered] = useState(false);
-
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    const rect = e.currentTarget.getBoundingClientRect();
-    setCoords({
-      x: e.clientX - rect.left,
-      y: e.clientY - rect.top,
-    });
-  };
-
   return (
-    <div
-      onMouseMove={handleMouseMove}
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-      className="group relative flex flex-col justify-between overflow-hidden bg-[#05070a] p-4 transition-colors duration-300 hover:bg-[#07090f]/70 border-r border-b border-edge"
-      style={{ minHeight: "110px" }}
-      data-cursor="hover"
-    >
-      {/* Repeating Dot Grid */}
+    <div className="relative pl-[3.25rem] pb-8 last:pb-0">
       <div
-        className="pointer-events-none absolute inset-0 opacity-[0.03] transition-opacity duration-300 group-hover:opacity-[0.06]"
-        style={{
-          backgroundImage: "radial-gradient(white 1px, transparent 1px)",
-          backgroundSize: "12px 12px",
-        }}
+        className="absolute left-[21px] top-3 bottom-0 w-px last:hidden"
+        style={{ background: "rgba(0,0,0,0.06)" }}
       />
-
-      {/* Dynamic Hover Glow spotlight in warning amber */}
-      {hovered && (
-        <div
-          className="pointer-events-none absolute inset-0 z-0 opacity-100 transition-opacity duration-300"
-          style={{
-            background: `radial-gradient(circle 90px at ${coords.x}px ${coords.y}px, rgba(245, 165, 36, 0.08), transparent 70%)`,
-          }}
-        />
-      )}
-
-      <div className="relative z-10 flex flex-col gap-2 h-full justify-between">
-        <div className="flex items-start gap-3">
-          <Icon size={15} className="shrink-0 text-warning transition-transform duration-300 group-hover:scale-110 mt-0.5" />
-          <div>
-            <p className="text-xs font-semibold text-white/95 group-hover:text-white transition-colors duration-300">{label}</p>
-            <p className="mt-0.5 text-[10px] leading-relaxed text-text-secondary">
-              {detail}
-            </p>
-          </div>
-        </div>
-
-        {/* Compounding-cost progress bar (glowing warning loading meter) */}
-        <div className="mt-2 h-[3px] w-full overflow-hidden rounded-full bg-white/[0.04] relative">
+      <motion.div
+        className={`absolute left-[17px] top-[11px] h-[10px] w-[10px] rounded-full border-[1.5px] transition-colors duration-500 ${
+          isOpen
+            ? "border-black bg-black"
+            : "border-black/15 bg-transparent"
+        }`}
+        animate={{
+          scale: isOpen ? [1, 1.4, 1] : 1,
+        }}
+        transition={{ duration: 0.5, ease: EASE }}
+      >
+        {isOpen && (
           <motion.div
-            initial={{ scaleX: 0 }}
-            whileInView={{ scaleX: 1 }}
-            viewport={{ once: true }}
-            transition={{
-              duration: 1.2,
-              delay: 0.1 + index * 0.08,
-              ease: EASE,
-            }}
-            style={{ originX: 0, width: `${35 + index * 15}%` }}
-            className={`h-full bg-gradient-to-r from-warning to-warning/40 transition-shadow duration-300 ${
-              hovered ? "shadow-[0_0_8px_rgba(245,165,36,0.8)]" : ""
-            }`}
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            transition={{ duration: 0.2, delay: 0.15 }}
+            className="h-full w-full rounded-full bg-black"
           />
+        )}
+      </motion.div>
+      <button
+        onClick={onToggle}
+        className="group flex w-full items-start justify-between text-left"
+      >
+        <div className="flex items-start gap-4">
+          <span
+            className={`mt-0.5 font-mono text-[10px] font-bold tracking-[0.15em] transition-colors duration-300 ${
+              isOpen ? "text-black/50" : "text-black/25"
+            }`}
+          >
+            {number}
+          </span>
+          <span
+            className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full border transition-all duration-300 ${
+              isOpen
+                ? "border-black/10 bg-white text-black/60 shadow-sm"
+                : "border-black/[0.04] bg-transparent text-black/30 group-hover:border-black/10 group-hover:bg-white/80 group-hover:text-black/50"
+            }`}
+          >
+            <Icon size={18} />
+          </span>
+          <span
+            className={`mt-[7px] text-sm font-semibold leading-snug transition-colors duration-300 ${
+              isOpen ? "text-black" : "text-black/60 group-hover:text-black/80"
+            }`}
+          >
+            {title}
+          </span>
         </div>
-      </div>
+        <motion.div
+          animate={{ rotate: isOpen ? 45 : 0 }}
+          transition={{ duration: 0.35, ease: EASE }}
+          className={`mt-[7px] flex h-6 w-6 shrink-0 items-center justify-center rounded-full border transition-all duration-300 ${
+            isOpen
+              ? "border-black/15 bg-black/[0.03] text-black/40"
+              : "border-black/[0.06] text-black/25 group-hover:border-black/15 group-hover:text-black/40"
+          }`}
+        >
+          <Plus size={12} />
+        </motion.div>
+      </button>
+      <motion.div
+        animate={{ height: isOpen ? "auto" : 0 }}
+        transition={{ duration: 0.35, ease: EASE }}
+        className="overflow-hidden"
+      >
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: isOpen ? 1 : 0 }}
+          transition={{ duration: 0.2, delay: isOpen ? 0.08 : 0 }}
+        >
+          <p className="ml-[3.75rem] mt-3 text-sm leading-relaxed text-black/50">
+            {description}
+          </p>
+        </motion.div>
+      </motion.div>
     </div>
   );
 }
 
 export function Problem() {
-  const reduce = useReducedMotion();
+  const containerRef = useRef<HTMLDivElement>(null);
+  const { scrollY } = useScroll();
+  const [openIndex, setOpenIndex] = useState<number>(0);
+
+  const bgY = useTransform(scrollY, [0, 800], [0, -30]);
+
+  const lineVariants = {
+    hidden: { y: "100%" },
+    visible: { y: 0 },
+  };
 
   return (
-    <section className="relative overflow-hidden py-32 sm:py-44">
-      {/* Aligns exactly to Hero max-w-7xl width */}
-      <div className="pointer-events-none absolute left-1/2 top-0 h-px w-full max-w-7xl -translate-x-1/2 hairline-gradient" />
+    <section
+      ref={containerRef}
+      className="relative min-h-screen overflow-hidden bg-[#f3f4f6]"
+    >
+      <motion.div
+        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+        style={{ backgroundImage: "url(/problem-bg.jpg)", y: bgY }}
+      />
+      <div className="absolute inset-0 bg-white/80 backdrop-blur-[2px]" />
 
-      <div className="relative mx-auto max-w-7xl px-6 lg:px-10">
-        {/* Eyebrow & heading */}
+      <div className="pointer-events-none absolute left-1/4 top-1/3 h-[30rem] w-[30rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-black/[0.02] blur-[120px]" />
+      <div className="pointer-events-none absolute right-[15%] top-[60%] h-[20rem] w-[20rem] rounded-full bg-accent/4 blur-[100px]" />
+
+      <div className="relative z-10 mx-auto min-h-screen max-w-7xl px-6 py-16 lg:py-24">
         <motion.div
           initial={{ opacity: 0, y: 24, filter: "blur(8px)" }}
           whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
@@ -505,90 +177,69 @@ export function Problem() {
           transition={{ duration: 0.9, ease: EASE }}
           className="flex flex-col items-center text-center"
         >
-          <span className="glass inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-xs font-medium uppercase tracking-[0.18em] text-text-secondary">
+          <span className="inline-flex items-center gap-2 rounded-full border border-black/10 bg-black/[0.03] px-4 py-1.5 text-[10px] font-bold uppercase tracking-[0.2em] text-black/50">
             <span className="h-1.5 w-1.5 rounded-full bg-red-500 shadow-[0_0_10px_rgba(239,68,68,0.9)]" />
             The problem
           </span>
-          <h2 className="mt-5 max-w-3xl text-balance text-4xl font-semibold leading-[1.08] tracking-tight sm:text-5xl lg:text-6xl">
-            Your company&apos;s intelligence is
-            <br />
-            <span className="gradient-text">scattered across islands</span>
+          <h2 className="mt-6 max-w-4xl text-balance font-display text-4xl font-semibold leading-[1.1] tracking-tight sm:text-5xl lg:text-6xl text-black">
+            <span className="relative overflow-hidden">
+              <motion.span
+                className="block"
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true }}
+                variants={lineVariants}
+                transition={{ duration: 1.1, delay: 0.3, ease: EASE }}
+              >
+                Your company&apos;s intelligence is scattered across islands
+              </motion.span>
+            </span>
           </h2>
-          <p className="mt-6 max-w-xl text-balance text-base leading-relaxed text-text-secondary">
+          <motion.p
+            initial={{ opacity: 0, y: 20, filter: "blur(4px)" }}
+            whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.9, delay: 0.8, ease: EASE }}
+            className="mt-5 max-w-lg text-balance text-base leading-relaxed text-black/50 sm:text-lg"
+          >
             Every tool holds a fragment of the truth. None of them talk to each
             other — and every question becomes an expedition.
-          </p>
+          </motion.p>
         </motion.div>
 
-        {/* 1 Row, 2 Columns Asymmetric Compress Layout */}
-        <div className="mt-16 grid items-center gap-12 lg:grid-cols-[1.2fr_1fr]">
-          
-          {/* Column 1: ScatterMap Infographic */}
-          <Reveal className="w-full" y={32}>
-            <ScatterMap />
-          </Reveal>
+        <div className="mt-16 grid items-start gap-12 lg:grid-cols-2 lg:gap-16">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8, ease: EASE }}
+            className="relative h-[420px] lg:h-[520px]"
+          >
+            <LivingKnowledgeNetwork />
+          </motion.div>
 
-          {/* Column 2: Stat Counter + Bento Compounding Cards stacked vertically */}
-          <div className="flex flex-col gap-8">
-            
-            {/* Animated Stat Counter Card */}
-            <motion.div
-              initial={{ opacity: 0, y: 24 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-8% 0px" }}
-              transition={{ duration: 0.9, ease: EASE }}
-              className="flex items-center gap-6 rounded-2xl border border-edge bg-white/[0.01] p-6 shadow-[0_4px_30px_rgba(0,0,0,0.1)]"
-            >
-              <div className="flex items-baseline gap-1 text-5xl font-semibold tracking-tight sm:text-6xl">
-                <span className="gradient-text text-glow shadow-[0_0_40px_rgba(245,165,36,0.2)]">
-                  <StatCounter target={19} suffix="%" />
-                </span>
-              </div>
-              <div className="text-left">
-                <p className="text-xs leading-relaxed text-text-secondary">
-                  of the average workweek is spent just searching for and gathering information — nearly a full day, every week.
-                </p>
-                <p className="mt-1 text-[10px] uppercase tracking-wider text-text-muted">
-                  Source: McKinsey Global Institute
-                </p>
-              </div>
-            </motion.div>
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8, delay: 0.15, ease: EASE }}
+          >
+            <span className="mb-8 block text-[10px] font-bold uppercase tracking-[0.25em] text-black/30">
+              The solution
+            </span>
 
-            {/* Vertical Bento Border-Grid Column */}
-            <div>
-              <p className="text-left text-[10px] font-bold uppercase tracking-[0.25em] text-text-muted mb-3">
-                And the cost compounds
-              </p>
-              
-              <Stagger className="overflow-hidden rounded-2xl border-t border-l border-edge bg-[#05070a] grid grid-cols-1 gap-0" gap={0.04}>
-                {CONSEQUENCES.map((c, i) => (
-                  <StaggerItem key={c.label}>
-                    <ConsequenceCard
-                      icon={c.icon}
-                      label={c.label}
-                      detail={c.detail}
-                      index={i}
-                      reduce={reduce}
-                    />
-                  </StaggerItem>
-                ))}
-              </Stagger>
+            <div className="relative">
+              {SOLUTION_STEPS.map((step, i) => (
+                <SolutionStep
+                  key={step.number}
+                  {...step}
+                  isOpen={openIndex === i}
+                  onToggle={() => setOpenIndex(openIndex === i ? i : i)}
+                />
+              ))}
             </div>
-
-          </div>
-
+          </motion.div>
         </div>
-
-        {/* Caption */}
-        <motion.p
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 1, delay: 0.8, ease: EASE }}
-          className="mt-12 text-center text-sm italic text-text-muted"
-        >
-          Eight tools. Zero shared memory.
-        </motion.p>
       </div>
     </section>
   );

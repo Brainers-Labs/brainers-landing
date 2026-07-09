@@ -26,7 +26,7 @@ export default function DocsPage() {
               BrainersOS Docs
             </h1>
             <p className="mt-4 max-w-2xl text-base text-white/60">
-              Integrate your company's intelligence into existing workflows, query knowledge graphs programmatically, and build autonomous agents.
+              Integrate your company&apos;s intelligence into existing workflows, query knowledge graphs programmatically, and build autonomous agents.
             </p>
           </div>
 

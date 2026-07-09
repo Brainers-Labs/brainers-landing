@@ -14,8 +14,6 @@ import {
   ScrollText,
   Eye,
   HardDrive,
-  FileSpreadsheet,
-  Cpu,
 } from "lucide-react";
 import { SectionHeading } from "../ui/SectionHeading";
 import { Stagger, StaggerItem } from "../ui/Reveal";

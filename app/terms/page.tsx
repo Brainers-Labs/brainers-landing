@@ -39,7 +39,7 @@ export default function TermsPage() {
             <section className="space-y-3">
               <h2 className="text-lg font-semibold text-white">2. Use of Services</h2>
               <p>
-                BrainersOS provides an enterprise AI operating system designed to index, structure, and query corporate knowledge bases. You are responsible for ensuring that all users authorized by you comply with these terms, and you retain all rights and ownership over your company's data.
+                BrainersOS provides an enterprise AI operating system designed to index, structure, and query corporate knowledge bases. You are responsible for ensuring that all users authorized by you comply with these terms, and you retain all rights and ownership over your company&apos;s data.
               </p>
             </section>
 

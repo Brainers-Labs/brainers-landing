@@ -1,5 +1,6 @@
 "use client";
 
+import React from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { ChevronDown, HelpCircle, Code, Shield } from "lucide-react";
 import { useState } from "react";
@@ -10,7 +11,7 @@ const EASE = [0.22, 1, 0.36, 1] as const;
 
 type FAQCategory = "general" | "tech" | "security";
 
-const CATEGORIES: Array<{ id: FAQCategory; label: string; icon: any }> = [
+const CATEGORIES: Array<{ id: FAQCategory; label: string; icon: React.ComponentType<{ size?: number; className?: string }> }> = [
   { id: "general", label: "General", icon: HelpCircle },
   { id: "tech", label: "Capabilities & Tech", icon: Code },
   { id: "security", label: "Security & Deploy", icon: Shield },

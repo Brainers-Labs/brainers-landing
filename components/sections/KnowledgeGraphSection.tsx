@@ -1,5 +1,6 @@
 "use client";
 
+import React from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   FileText,
@@ -117,7 +118,7 @@ const EDGES: Array<[string, string]> = [
   ["risk-minutes", "cto-office"],
 ];
 
-const TYPE_META: Record<GraphNodeType, { label: string; color: string; icon: any }> = {
+const TYPE_META: Record<GraphNodeType, { label: string; color: string; icon: React.ComponentType<{ size?: number; className?: string; style?: React.CSSProperties }> }> = {
   document: { label: "Document", color: "#3b82f6", icon: FileText },
   policy: { label: "Policy", color: "#7c5cfc", icon: Shield },
   person: { label: "Owner", color: "#18c964", icon: User },
@@ -195,7 +196,6 @@ export function KnowledgeGraphSection() {
                           strokeWidth={0.8}
                           strokeDasharray="2 12"
                           animate={{ strokeDashoffset: [0, -14] }}
-                          // @ts-ignore
                           transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }}
                         />
                       )}
