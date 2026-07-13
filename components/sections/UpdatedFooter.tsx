@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { GitFork, Globe, Hash, MessageCircle, ArrowRight, Check } from "lucide-react";
-import { BrainMark } from "../ui/BrainMark";
+import Image from "next/image";
 
 const COLUMNS = [
   {
@@ -58,9 +58,8 @@ export function UpdatedFooter() {
         {/* Company Intro & Newsletter */}
         <div className="lg:col-span-2 flex flex-col justify-between gap-8">
           <div>
-            <div className="flex items-center gap-2.5">
-              <BrainMark size={30} />
-              <span className="text-[15px] font-semibold tracking-tight text-white">BrainersOS</span>
+            <div className="flex items-center">
+              <Image src="/logo.png" alt="Brainers Labs Logo" width={150} height={38} className="h-9 w-auto object-contain" />
             </div>
             <p className="mt-4 max-w-xs text-sm leading-relaxed text-text-muted">
               The AI operating system that turns everything your company knows

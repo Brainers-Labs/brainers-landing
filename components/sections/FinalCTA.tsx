@@ -26,10 +26,16 @@ export function FinalCTA() {
 
   return (
     <section id="cta" ref={ref} className="relative overflow-hidden">
+      {/* cta-bg overlay */}
+      <div
+        className="absolute inset-0 bg-center bg-cover opacity-15"
+        style={{ backgroundImage: "url('/images/cta-bg.png')" }}
+      />
+
       {/* The brightening dawn */}
       <motion.div
         style={{ opacity: glow }}
-        className="pointer-events-none absolute inset-0 bg-[radial-gradient(70%_60%_at_50%_75%,rgba(59,130,246,0.22),rgba(124,92,252,0.1)_45%,transparent_75%)]"
+        className="pointer-events-none absolute inset-0 bg-[radial-gradient(70%_60%_at_50%_75%,rgba(59,130,246,0.12),rgba(124,92,252,0.05)_45%,transparent_70%)]"
       />
 
       <div className="relative mx-auto flex min-h-[92svh] max-w-4xl flex-col items-center justify-center px-6 py-32 text-center">

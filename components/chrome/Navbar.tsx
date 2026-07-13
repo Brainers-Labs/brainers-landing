@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import { motion, useScroll, useMotionValueEvent, AnimatePresence } from "framer-motion";
 import { Plus, Menu, X } from "lucide-react";
 import { useState, useRef, Fragment } from "react";
-import { BrainMark } from "../ui/BrainMark";
+import Image from "next/image";
 
 const LINKS = [
   { label: "Product", href: "#how-it-works" },
@@ -61,11 +61,8 @@ export function Navbar() {
           aria-label="Main Navigation"
         >
           {/* Logo Brand */}
-          <Link href="/" className="flex items-center gap-3" data-cursor="hover">
-            <BrainMark size={36} />
-            <span className="font-display text-[17px] font-semibold tracking-tight text-white">
-              BrainersOS
-            </span>
+          <Link href="/" className="flex items-center" data-cursor="hover">
+            <Image src="/logo.png" alt="Brainers Labs Logo" width={150} height={38} className="h-9 w-auto object-contain" />
           </Link>
 
           {/* Desktop Nav Actions */}

@@ -1,136 +1,15 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import {
-  FileText,
-  GitBranch,
-  ShieldCheck,
-  User,
-  Shield,
-  Terminal,
-  Share2,
-} from "lucide-react";
-import { useState } from "react";
 import { SectionHeading } from "../ui/SectionHeading";
 import { Reveal } from "../ui/Reveal";
-
-const EASE = [0.22, 1, 0.36, 1] as const;
-
-type GraphNodeType = "document" | "policy" | "person" | "system";
-
-type GraphNode = {
-  id: string;
-  label: string;
-  type: GraphNodeType;
-  x: number; // percentage
-  y: number; // percentage
-  detail: string;
-};
-
-const NODES: GraphNode[] = [
-  {
-    id: "compliance-policy",
-    label: "Compliance Policy v4",
-    type: "policy",
-    x: 50,
-    y: 50,
-    detail: "Main governance framework updated for fiscal year 2026. Governs onboarding steps.",
-  },
-  {
-    id: "aml-regulation",
-    label: "AML Regulation 2025",
-    type: "policy",
-    x: 32,
-    y: 28,
-    detail: "Statutory requirements detailing threshold screening limits for international transfers.",
-  },
-  {
-    id: "kyc-procedure",
-    label: "KYC Procedure",
-    type: "policy",
-    x: 68,
-    y: 28,
-    detail: "Operational guide detailing customer identification verification pipelines.",
-  },
-  {
-    id: "head-compliance",
-    label: "Head of Compliance",
-    type: "person",
-    x: 50,
-    y: 20,
-    detail: "Senior owner responsible for signoff and audit trails of KYC compliance overrides.",
-  },
-  {
-    id: "banking-api",
-    label: "Core Banking API Spec",
-    type: "document",
-    x: 22,
-    y: 50,
-    detail: "Technical specifications defining transaction trigger boundaries and hooks.",
-  },
-  {
-    id: "slack-ops",
-    label: "Slack #operations",
-    type: "system",
-    x: 78,
-    y: 50,
-    detail: "Communication stream logging live alerts and compliance override signals.",
-  },
-  {
-    id: "jira-atlas",
-    label: "Jira — Project Atlas",
-    type: "system",
-    x: 32,
-    y: 72,
-    detail: "Task pipeline tracking core infrastructure modifications and engineering reviews.",
-  },
-  {
-    id: "risk-minutes",
-    label: "Risk Committee Minutes",
-    type: "document",
-    x: 68,
-    y: 72,
-    detail: "Formal record of decision parameters regarding lowered screening limits.",
-  },
-  {
-    id: "cto-office",
-    label: "CTO Office",
-    type: "person",
-    x: 50,
-    y: 80,
-    detail: "Engineering stakeholder authorizing API infrastructure deployments.",
-  },
-];
-
-const EDGES: Array<[string, string]> = [
-  ["compliance-policy", "head-compliance"],
-  ["compliance-policy", "aml-regulation"],
-  ["compliance-policy", "kyc-procedure"],
-  ["compliance-policy", "banking-api"],
-  ["compliance-policy", "slack-ops"],
-  ["compliance-policy", "jira-atlas"],
-  ["compliance-policy", "risk-minutes"],
-  ["compliance-policy", "cto-office"],
-  ["aml-regulation", "head-compliance"],
-  ["kyc-procedure", "slack-ops"],
-  ["banking-api", "jira-atlas"],
-  ["risk-minutes", "cto-office"],
-];
-
-const TYPE_META: Record<GraphNodeType, { label: string; color: string; icon: React.ComponentType<{ size?: number; className?: string; style?: React.CSSProperties }> }> = {
-  document: { label: "Document", color: "#3b82f6", icon: FileText },
-  policy: { label: "Policy", color: "#7c5cfc", icon: Shield },
-  person: { label: "Owner", color: "#18c964", icon: User },
-  system: { label: "System", color: "#f5a524", icon: Terminal },
-};
+import { NODES, EDGES, TYPE_META, EASE } from "./graphData";
 
 export function KnowledgeGraphSection() {
   const [activeId, setActiveId] = useState<string | null>(null);
-
   const activeNode = NODES.find((n) => n.id === activeId) || null;
 
-  // Helper to check if an edge connects to the active node
   const isEdgeHighlighted = (fromId: string, toId: string) => {
     if (!activeId) return false;
     return fromId === activeId || toId === activeId;
@@ -138,7 +17,6 @@ export function KnowledgeGraphSection() {
 
   return (
     <section id="knowledge-graph" className="relative py-32 sm:py-44">
-      {/* Ambient glow behind the graph */}
       <div className="pointer-events-none absolute left-1/2 top-1/2 h-[700px] w-[700px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-accent/5 blur-[140px]" />
 
       <div className="relative mx-auto max-w-7xl px-6 lg:px-10">
@@ -149,103 +27,144 @@ export function KnowledgeGraphSection() {
         />
 
         <div className="mt-16 grid items-start gap-8 lg:grid-cols-[1.5fr_1fr]">
-          {/* Relationship Map (Interactive SVG/HTML Canvas) */}
+          
+          {/* Map Wrapper with Container-Level Reset */}
           <Reveal className="relative" blur={false}>
-            <div className="relative h-[460px] overflow-hidden rounded-3xl border border-edge bg-[#05070a]/60 sm:h-[520px]">
+            <div 
+              className="relative h-[460px] overflow-hidden rounded-3xl border border-edge bg-[#05070a]/60 sm:h-[520px]"
+              onMouseLeave={() => setActiveId(null)}
+            >
+              {/* Tap backdrop to clear selection on Mobile */}
+              <div className="absolute inset-0 z-0" onClick={() => setActiveId(null)} />
               
-              {/* Dot grid backdrop */}
-              <div className="absolute inset-0 opacity-10"
+              <div className="absolute inset-0 opacity-10 pointer-events-none"
                 style={{
                   backgroundImage: "radial-gradient(rgba(255, 255, 255, 0.15) 1px, transparent 1px)",
                   backgroundSize: "24px 24px"
                 }}
               />
 
-              {/* Edge Connection Layer */}
-              <svg className="absolute inset-0 h-full w-full pointer-events-none" viewBox="0 0 100 100" preserveAspectRatio="none">
+              {/* Edge Connection Layer — Bezier curves (infographic style) */}
+              <svg className="absolute inset-0 h-full w-full pointer-events-none z-10" viewBox="0 0 100 100" preserveAspectRatio="none">
+                <defs>
+                  <filter id="edge-glow">
+                    <feGaussianBlur stdDeviation="0.5" result="blur" />
+                    <feMerge>
+                      <feMergeNode in="blur" />
+                      <feMergeNode in="SourceGraphic" />
+                    </feMerge>
+                  </filter>
+                </defs>
                 {EDGES.map(([fromId, toId], idx) => {
                   const fromNode = NODES.find((n) => n.id === fromId)!;
                   const toNode = NODES.find((n) => n.id === toId)!;
                   const isHighlighted = isEdgeHighlighted(fromId, toId);
-                  
-                  // Color defaults to faint white/blue unless highlighted by active node's color
-                  let strokeColor = "rgba(255,255,255,0.06)";
+
+                  const dx = toNode.x - fromNode.x;
+                  const pathData = `M ${fromNode.x} ${fromNode.y} C ${fromNode.x + dx * 0.5} ${fromNode.y}, ${fromNode.x + dx * 0.5} ${toNode.y}, ${toNode.x} ${toNode.y}`;
+
+                  let strokeColor = "rgba(255,255,255,0.04)";
                   if (isHighlighted && activeNode) {
                     strokeColor = TYPE_META[activeNode.type].color;
                   }
 
                   return (
                     <g key={idx}>
-                      <line
-                        x1={fromNode.x}
-                        y1={fromNode.y}
-                        x2={toNode.x}
-                        y2={toNode.y}
+                      <path
+                        d={pathData}
+                        fill="none"
                         stroke={strokeColor}
-                        strokeWidth={isHighlighted ? 0.6 : 0.25}
-                        strokeDasharray={isHighlighted ? "none" : "1 1"}
-                        className="transition-colors duration-300"
+                        strokeWidth={0.3}
+                        strokeLinecap="round"
+                        className="transition-all duration-500 ease-out"
                       />
                       {isHighlighted && (
-                        <motion.line
-                          x1={fromNode.x}
-                          y1={fromNode.y}
-                          x2={toNode.x}
-                          y2={toNode.y}
-                          stroke={strokeColor}
-                          strokeWidth={0.8}
-                          strokeDasharray="2 12"
-                          animate={{ strokeDashoffset: [0, -14] }}
-                          transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }}
-                        />
+                        <>
+                          <path
+                            d={pathData}
+                            fill="none"
+                            stroke={strokeColor}
+                            strokeWidth={0.7}
+                            strokeLinecap="round"
+                            filter="url(#edge-glow)"
+                            className="transition-all duration-300"
+                          />
+                          <motion.path
+                            d={pathData}
+                            fill="none"
+                            stroke={strokeColor}
+                            strokeWidth={0.5}
+                            strokeLinecap="round"
+                            strokeDasharray="1 40"
+                            animate={{ strokeDashoffset: [-41, 0] }}
+                            transition={{ repeat: Infinity, duration: 3, ease: "linear" }}
+                          />
+                        </>
                       )}
                     </g>
                   );
                 })}
               </svg>
 
-              {/* Floating Responsive Node Chips */}
+              {/* Floating Node Chips — annotation style */}
               {NODES.map((node) => {
                 const meta = TYPE_META[node.type];
-                const Icon = meta.icon;
                 const isSelected = activeId === node.id;
                 const isHighlightedNeighbor = activeId
                   ? EDGES.some(([from, to]) => (from === activeId && to === node.id) || (to === activeId && from === node.id))
                   : false;
+                const isDimmed = activeId !== null && !isSelected && !isHighlightedNeighbor;
 
                 return (
                   <motion.button
                     key={node.id}
                     onMouseEnter={() => setActiveId(node.id)}
-                    onMouseLeave={() => setActiveId(null)}
-                    onClick={() => setActiveId(node.id)}
-                    className="absolute -translate-x-1/2 -translate-y-1/2 z-10"
+                    onFocus={() => setActiveId(node.id)}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setActiveId(node.id);
+                    }}
+                    className="absolute -translate-x-1/2 -translate-y-1/2 z-20 outline-none focus-visible:ring-2 focus-visible:ring-white/40"
                     style={{ left: `${node.x}%`, top: `${node.y}%` }}
-                    whileHover={{ scale: 1.05 }}
-                    transition={{ type: "spring", stiffness: 400, damping: 25 }}
+                    whileHover={{ scale: 1.04 }}
+                    whileFocus={{ scale: 1.04 }}
+                    animate={{
+                      opacity: isDimmed ? 0.1 : isSelected ? 1 : 0.6,
+                      scale: isSelected ? 1.08 : 1,
+                      filter: isDimmed ? "blur(2px)" : "blur(0px)",
+                    }}
+                    transition={{ duration: 0.35, ease: EASE }}
+                    aria-label={`${meta.label}: ${node.label}`}
+                    aria-expanded={isSelected}
                   >
+                    {/* Atmospheric glow behind selected */}
+                    {isSelected && (
+                      <div
+                        className="absolute -inset-12 -z-10 animate-pulse rounded-full opacity-15 blur-2xl"
+                        style={{ background: `radial-gradient(circle, ${meta.color} 0%, transparent 70%)` }}
+                      />
+                    )}
                     <div
-                      className={`glass flex items-center gap-2 rounded-full border px-3.5 py-1.5 transition-all duration-300 ${
-                        isSelected
-                          ? "bg-white/[0.06] shadow-[0_0_24px_rgba(255,255,255,0.06)]"
-                          : isHighlightedNeighbor
-                          ? "border-white/20 bg-white/[0.03]"
-                          : "border-edge bg-holo-card/40"
+                      className={`flex items-center gap-1.5 rounded-md px-2 py-1 transition-all duration-300 ${
+                        isSelected ? "bg-white/[0.04]" : ""
                       }`}
-                      style={{
-                        borderColor: isSelected || isHighlightedNeighbor ? meta.color : "",
-                        boxShadow: isSelected ? `0 0 20px ${meta.color}25` : "",
-                      }}
                     >
-                      <Icon
-                        size={13}
-                        style={{ color: isSelected || isHighlightedNeighbor ? meta.color : "rgba(255,255,255,0.4)" }}
-                        className="transition-colors duration-300"
+                      <span
+                        className="h-1 w-1 rounded-full transition-all duration-300"
+                        style={{
+                          background: isSelected || isHighlightedNeighbor ? meta.color : "rgba(255,255,255,0.25)",
+                          boxShadow: isSelected ? `0 0 6px ${meta.color}` : "none",
+                        }}
                       />
                       <span
-                        className={`text-[10px] font-medium tracking-tight transition-colors duration-300 ${
-                          isSelected ? "text-white" : "text-text-secondary group-hover:text-white"
-                        }`}
+                        className="text-[10px] font-medium tracking-tight transition-colors duration-300 whitespace-nowrap"
+                        style={{
+                          color: isSelected
+                            ? meta.color
+                            : isHighlightedNeighbor
+                            ? "rgba(255,255,255,0.85)"
+                            : "rgba(255,255,255,0.45)",
+                        }}
                       >
                         {node.label}
                       </span>
@@ -254,7 +173,7 @@ export function KnowledgeGraphSection() {
                 );
               })}
 
-              <div className="pointer-events-none absolute inset-x-0 bottom-0 flex justify-center pb-4">
+              <div className="pointer-events-none absolute inset-x-0 bottom-0 flex justify-center pb-4 z-30">
                 <span className="glass rounded-full px-4 py-1.5 text-[10px] uppercase tracking-[0.2em] text-text-muted">
                   Hover the nodes — the graph responds
                 </span>
@@ -264,7 +183,7 @@ export function KnowledgeGraphSection() {
 
           {/* Evidence panel (Right) */}
           <Reveal delay={0.12}>
-            <div className="glass-strong relative min-h-[340px] overflow-hidden rounded-3xl p-7">
+            <div className="glass-strong relative min-h-[340px] overflow-hidden rounded-3xl p-7" aria-live="polite">
               <div className="hairline-gradient absolute inset-x-0 top-0" />
               <AnimatePresence mode="wait">
                 {activeNode ? (
@@ -279,28 +198,31 @@ export function KnowledgeGraphSection() {
                       className="inline-flex items-center gap-2 rounded-full border border-white/10 px-3 py-1 text-[11px] font-medium uppercase tracking-[0.18em]"
                       style={{ color: TYPE_META[activeNode.type].color }}
                     >
-                      <span
-                        className="h-1.5 w-1.5 rounded-full"
-                        style={{ background: TYPE_META[activeNode.type].color }}
-                      />
+                      <span className="h-1.5 w-1.5 rounded-full" style={{ background: TYPE_META[activeNode.type].color }} />
                       {TYPE_META[activeNode.type].label}
                     </span>
                     
                     <h3 className="mt-4 text-2xl font-semibold tracking-tight">{activeNode.label}</h3>
                     <p className="mt-3 text-sm leading-relaxed text-text-muted">{activeNode.detail}</p>
                     
-                    <ul className="mt-6 space-y-4 text-sm text-text-secondary">
+                    <ul className="mt-6 space-y-3 text-sm">
                       <li className="flex items-start gap-3">
-                        <GitBranch size={16} className="mt-0.5 shrink-0 text-accent" />
-                        Linked to related policies, owners, and source systems in the graph.
+                        <div className="mt-1 h-4 w-0.5 shrink-0 rounded-full bg-accent" />
+                        <span className="text-text-secondary leading-relaxed">
+                          Linked to related policies, owners, and source systems in the graph.
+                        </span>
                       </li>
                       <li className="flex items-start gap-3">
-                        <Share2 size={16} className="mt-0.5 shrink-0 text-violet" />
-                        Interactive flow mappings and live dependency checking active.
+                        <div className="mt-1 h-4 w-0.5 shrink-0 rounded-full bg-violet" />
+                        <span className="text-text-secondary leading-relaxed">
+                          Interactive flow mappings and live dependency checking active.
+                        </span>
                       </li>
                       <li className="flex items-start gap-3">
-                        <ShieldCheck size={16} className="mt-0.5 shrink-0 text-success" />
-                        Access controlled — people only see what they&apos;re allowed to see.
+                        <div className="mt-1 h-4 w-0.5 shrink-0 rounded-full bg-success" />
+                        <span className="text-text-secondary leading-relaxed">
+                          Access controlled — people only see what they&apos;re allowed to see.
+                        </span>
                       </li>
                     </ul>
                   </motion.div>
@@ -322,10 +244,7 @@ export function KnowledgeGraphSection() {
                     </p>
                     <div className="mt-8 flex flex-wrap gap-2">
                       {Object.entries(TYPE_META).map(([key, meta]) => (
-                        <span
-                          key={key}
-                          className="glass inline-flex items-center gap-2 rounded-full px-3 py-1 text-[11px] text-text-secondary"
-                        >
+                        <span key={key} className="glass inline-flex items-center gap-2 rounded-full px-3 py-1 text-[11px] text-text-secondary">
                           <span className="h-1.5 w-1.5 rounded-full" style={{ background: meta.color }} />
                           {meta.label}
                         </span>
@@ -338,7 +257,6 @@ export function KnowledgeGraphSection() {
           </Reveal>
         </div>
       </div>
-      {/* Knowledge Graph Section background glow */}
       <div className="pointer-events-none absolute right-[-5%] top-[40%] z-0 h-[480px] w-[480px] rounded-full bg-violet/5 blur-[120px]" />
     </section>
   );
