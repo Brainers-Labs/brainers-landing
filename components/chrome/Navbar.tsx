@@ -61,7 +61,14 @@ export function Navbar() {
         >
           <Link href="/" className="flex items-center" data-cursor="hover">
             <span className="font-display text-xl font-semibold tracking-tight text-white/90">
-              Syna<span className="relative inline-block font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-indigo-400 to-violet-400 ml-0.5 italic">X</span>
+              Syna
+              <motion.span
+                animate={{ scale: [1, 1.15, 1], filter: ["drop-shadow(0 0 2px rgba(59,130,246,0.25))", "drop-shadow(0 0 8px rgba(59,130,246,0.65))", "drop-shadow(0 0 2px rgba(59,130,246,0.25))"] }}
+                transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut" }}
+                className="relative inline-block font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-500 via-[#35d6ff] to-[#7c5cfc] ml-0.5 italic"
+              >
+                X
+              </motion.span>
             </span>
           </Link>
 
