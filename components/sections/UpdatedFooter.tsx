@@ -63,11 +63,17 @@ export function UpdatedFooter() {
                 Syna
                 <motion.span
                   animate={{
-                    scale: [1, 1.25, 1],
-                    rotate: [0, 360, 360],
-                    filter: ["drop-shadow(0 0 2px rgba(59,130,246,0.25))", "drop-shadow(0 0 8px rgba(59,130,246,0.65))", "drop-shadow(0 0 2px rgba(59,130,246,0.25))"]
+                    scale: [1, 1.25, 1, 1, 1],
+                    rotate: [0, 360, 360, 360, 360],
+                    filter: [
+                      "drop-shadow(0 0 2px rgba(59,130,246,0.25))",
+                      "drop-shadow(0 0 8px rgba(59,130,246,0.65))",
+                      "drop-shadow(0 0 2px rgba(59,130,246,0.25))",
+                      "drop-shadow(0 0 2px rgba(59,130,246,0.25))",
+                      "drop-shadow(0 0 2px rgba(59,130,246,0.25))"
+                    ]
                   }}
-                  transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                  transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
                   className="relative inline-block font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-500 via-[#35d6ff] to-[#7c5cfc] ml-1 italic"
                 >
                   X
