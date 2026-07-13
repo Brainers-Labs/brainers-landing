@@ -404,7 +404,7 @@ export default function IntelligenceCore() {
         <div>
           <h4 className="text-xs font-bold uppercase tracking-widest text-blue-400">The Resolution</h4>
           <p className="mt-1 text-sm font-medium leading-relaxed text-white/70">
-            BrainersOS targets structural information fragmentation at its core. It operates across tools, converting siloed records into an unified organizational intelligence model.
+            SynaX targets structural information fragmentation at its core. It operates across tools, converting siloed records into an unified organizational intelligence model.
           </p>
         </div>
         <div className="flex justify-start md:justify-end">

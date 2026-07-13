@@ -1,238 +1,410 @@
 "use client";
 
-import { AnimatePresence, motion, useInView } from "framer-motion";
-import { Search, Network, Cog, HardDrive, FileText, CheckCircle, Sparkles, ArrowRight } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
-import { SectionHeading } from "../ui/SectionHeading";
-import { Reveal } from "../ui/Reveal";
-
-const QUESTION = "Which compliance policy affects customer onboarding?";
-
-const STEPS = [
-  { icon: Search, label: "Search", color: "#3B82F6" },
-  { icon: Network, label: "Graph traversal", color: "#7C5CFC" },
-  { icon: Cog, label: "Reasoning", color: "#35D6FF" },
-  { icon: HardDrive, label: "Memory retrieval", color: "#18C964" },
-  { icon: FileText, label: "Evidence", color: "#F5A524" },
-  { icon: CheckCircle, label: "Answer", color: "#3B82F6" },
-];
+import { AnimatePresence, motion } from "framer-motion";
+import {
+  Brain,
+  GitBranch,
+  LayoutDashboard,
+  Network,
+  Bot,
+  Plug,
+  Search,
+  FileText,
+} from "lucide-react";
+import { useEffect, useState } from "react";
 
 const EASE = [0.22, 1, 0.36, 1] as const;
 
-const ANSWER =
-  "Customer onboarding is governed by your KYC Procedure (v3.2) and the AML Regulation 2025 (Article 7). Due-diligence thresholds were lowered to ₦5m in Q2. See Policy #KYC-009, Section 4.1.";
+type Screen =
+  | "dashboard"
+  | "knowledge"
+  | "agents"
+  | "connectors"
+  | "ask";
 
-const SOURCES = [
-  { doc: "KYC Procedure v3.2", section: "Section 4.1 — Due Diligence", match: 97 },
-  { doc: "AML Regulation 2025", section: "Article 7 — Customer Screening", match: 94 },
-  { doc: "Risk Committee Minutes", section: "April 14 — Threshold Decision", match: 91 },
+const SCREENS: Screen[] = [
+  "dashboard",
+  "knowledge",
+  "agents",
+  "connectors",
+  "ask",
 ];
 
-type Phase = "idle" | "searching" | "graph" | "reasoning" | "memory" | "evidence" | "answering" | "done";
+function StatusPill({ label }: { label: string }) {
+  return (
+    <div className="flex items-center gap-1.5 rounded-full bg-white/[0.04] px-3 py-1 border border-white/5">
+      <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
+      <span className="text-[10px] font-medium text-white/50">{label}</span>
+    </div>
+  );
+}
+
+function SidebarItem({
+  active,
+  icon: Icon,
+  children,
+}: {
+  active: boolean;
+  icon: React.ComponentType<{ className?: string; size?: number }>;
+  children: React.ReactNode;
+}) {
+  return (
+    <div
+      className={`flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition-all duration-300 ${active
+          ? "bg-violet-600/10 text-violet-400 border border-violet-500/20"
+          : "text-white/40 hover:text-white/60 hover:bg-white/[0.02]"
+        }`}
+    >
+      <Icon className="h-4 w-4 shrink-0" />
+      <span>{children}</span>
+    </div>
+  );
+}
+
+function Metric({ title, value }: { title: string; value: string }) {
+  return (
+    <div className="rounded-2xl border border-white/5 bg-white/[0.02] p-5">
+      <p className="text-xs text-white/40 uppercase tracking-wider">{title}</p>
+      <h4 className="mt-2 text-3xl font-bold text-white">{value}</h4>
+    </div>
+  );
+}
+
+function SourceCard({ title }: { title: string }) {
+  return (
+    <div className="flex items-center gap-2.5 rounded-xl border border-white/5 bg-white/[0.02] p-3 text-xs text-white/60">
+      <FileText className="h-3.5 w-3.5 text-violet-400" />
+      <span>{title}</span>
+    </div>
+  );
+}
 
 export function LiveDemo() {
-  const ref = useRef<HTMLDivElement>(null);
-  const inView = useInView(ref, { margin: "-15% 0px" });
-  const [phase, setPhase] = useState<Phase>("idle");
-  const [typed, setTyped] = useState("");
-  const [answerText, setAnswerText] = useState("");
+  const [screen, setScreen] = useState<Screen>("dashboard");
+  const [question, setQuestion] = useState("");
+  const [answer, setAnswer] = useState("");
 
   useEffect(() => {
-    if (!inView) {
-      setPhase("idle");
-      setTyped("");
-      setAnswerText("");
-      return;
-    }
     let cancelled = false;
     const timers: ReturnType<typeof setTimeout>[] = [];
-    const wait = (ms: number) => new Promise<void>((r) => timers.push(setTimeout(r, ms)));
+
+    const wait = (ms: number) =>
+      new Promise<void>((r) => {
+        timers.push(setTimeout(r, ms));
+      });
 
     async function run() {
       while (!cancelled) {
-        setTyped("");
-        setAnswerText("");
-        setPhase("searching");
-        for (let i = 1; i <= QUESTION.length && !cancelled; i++) {
-          setTyped(QUESTION.slice(0, i));
-          await wait(30);
+        for (const s of SCREENS) {
+          setScreen(s);
+          setQuestion("");
+          setAnswer("");
+
+          if (s === "ask") {
+            const q =
+              "What risks are blocking the roadmap?";
+
+            for (let i = 0; i <= q.length; i++) {
+              if (cancelled) return;
+              setQuestion(q.slice(0, i));
+              await wait(25);
+            }
+
+            await wait(800);
+
+            const a =
+              "Two risks are currently blocking the roadmap: delayed connector migrations and unresolved entity merge proposals. The issues originate from Sprint #24 engineering notes and governance review records.";
+
+            for (let i = 0; i <= a.length; i += 4) {
+              if (cancelled) return;
+              setAnswer(a.slice(0, i));
+              await wait(10);
+            }
+          }
+
+          await wait(3500);
         }
-        if (cancelled) return;
-        await wait(400);
-        if (cancelled) return;
-        setPhase("graph");
-        await wait(600);
-        if (cancelled) return;
-        setPhase("reasoning");
-        await wait(700);
-        if (cancelled) return;
-        setPhase("memory");
-        await wait(500);
-        if (cancelled) return;
-        setPhase("evidence");
-        await wait(600);
-        if (cancelled) return;
-        setPhase("answering");
-        for (let i = 1; i <= ANSWER.length && !cancelled; i += 4) {
-          setAnswerText(ANSWER.slice(0, i));
-          await wait(12);
-        }
-        setAnswerText(ANSWER);
-        if (cancelled) return;
-        await wait(500);
-        if (cancelled) return;
-        setPhase("done");
-        await wait(5000);
       }
     }
+
     run();
+
     return () => {
       cancelled = true;
       timers.forEach(clearTimeout);
     };
-  }, [inView]);
-
-  const activeIdx = ["searching", "graph", "reasoning", "memory", "evidence", "answering", "done"].indexOf(phase);
+  }, []);
 
   return (
-    <section className="relative overflow-hidden py-32 sm:py-44">
-      <div className="pointer-events-none absolute left-1/2 top-0 h-px w-full max-w-4xl -translate-x-1/2 hairline-gradient" />
+    <section className="relative py-32">
+      <div className="mx-auto max-w-7xl px-6">
+        <div className="overflow-hidden rounded-[32px] border border-white/10 bg-[#020617] shadow-[0_40px_120px_rgba(0,0,0,0.65)]">
+          <BrowserChrome />
 
-      <div className="relative mx-auto max-w-7xl px-6 lg:px-10">
-        <SectionHeading
-          eyebrow="Live Demo"
-          title="See it in action."
-          subtitle="Type a question and watch BrainersOS search, reason, retrieve, and deliver a verified answer."
-        />
+          <div className="flex h-[760px]">
+            <Sidebar screen={screen} />
 
-        <Reveal className="mt-16 w-full" y={40}>
-          <div ref={ref} className="glass-strong relative mx-auto w-full overflow-hidden rounded-3xl shadow-[0_40px_120px_rgba(0,0,0,0.5)]">
-            <div className="hairline-gradient absolute inset-x-0 top-0" />
+            <div className="flex-1 overflow-hidden bg-[#030712]/50">
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={screen}
+                  initial={{
+                    opacity: 0,
+                    y: 16,
+                  }}
+                  animate={{
+                    opacity: 1,
+                    y: 0,
+                  }}
+                  exit={{
+                    opacity: 0,
+                    y: -16,
+                  }}
+                  transition={{
+                    duration: 0.5,
+                    ease: EASE,
+                  }}
+                  className="h-full"
+                >
+                  {screen === "dashboard" && (
+                    <DashboardScreen />
+                  )}
 
-            {/* Window chrome */}
-            <div className="flex items-center gap-2 border-b border-edge px-5 py-3.5">
-              <span className="h-2.5 w-2.5 rounded-full bg-white/12" />
-              <span className="h-2.5 w-2.5 rounded-full bg-white/12" />
-              <span className="h-2.5 w-2.5 rounded-full bg-white/12" />
-              <span className="ml-3 text-xs text-text-muted">BrainersOS — Live Query</span>
-            </div>
+                  {screen === "knowledge" && (
+                    <KnowledgeScreen />
+                  )}
 
-            <div className="p-6 sm:p-8">
-              {/* Search input */}
-              <div className="glass flex items-center gap-3 rounded-2xl px-5 py-4">
-                <Search size={18} className="shrink-0 text-accent" />
-                <p className="min-h-[1.5rem] flex-1 text-sm text-white sm:text-base">
-                  {typed}
-                  {phase === "searching" && (
-                    <motion.span
-                      animate={{ opacity: [1, 0] }}
-                      transition={{ duration: 0.7, repeat: Infinity }}
-                      className="ml-0.5 inline-block h-4 w-px translate-y-0.5 bg-accent align-baseline"
+                  {screen === "agents" && (
+                    <AgentsScreen />
+                  )}
+
+                  {screen === "connectors" && (
+                    <ConnectorsScreen />
+                  )}
+
+                  {screen === "ask" && (
+                    <AskBrainScreen
+                      question={question}
+                      answer={answer}
                     />
                   )}
-                </p>
-              </div>
-
-              {/* Pipeline visualization */}
-              <div className="mt-8 flex flex-wrap items-center justify-center gap-2 sm:gap-3">
-                {STEPS.map((step, i) => {
-                  const isActive = i <= activeIdx && phase !== "idle" && phase !== "searching" && i > 0 ? activeIdx >= i : i === 0 && (phase === "searching" || activeIdx >= 0);
-                  const isCurrent = i === activeIdx;
-                  return (
-                    <div key={step.label} className="flex items-center gap-2 sm:gap-3">
-                      <motion.div
-                        animate={{
-                          scale: isCurrent ? 1.08 : 1,
-                          borderColor: isActive ? step.color : "rgba(255,255,255,0.08)",
-                        }}
-                        className="flex items-center gap-2 rounded-xl border px-3 py-2 transition-all duration-500 sm:px-4"
-                        style={{
-                          background: isActive ? `${step.color}15` : "rgba(255,255,255,0.03)",
-                          borderColor: isActive ? `${step.color}50` : "rgba(255,255,255,0.08)",
-                          boxShadow: isCurrent ? `0 0 20px ${step.color}30` : "none",
-                        }}
-                      >
-                        <step.icon size={14} style={{ color: isActive ? step.color : "rgba(255,255,255,0.35)" }} />
-                        <span className="text-[11px] font-medium sm:text-xs" style={{ color: isActive ? "#fff" : "rgba(255,255,255,0.35)" }}>
-                          {step.label}
-                        </span>
-                      </motion.div>
-                      {i < STEPS.length - 1 && (
-                        <ArrowRight size={12} className="shrink-0 text-white/15" />
-                      )}
-                    </div>
-                  );
-                })}
-              </div>
-
-              {/* Answer */}
-              <AnimatePresence>
-                {(phase === "answering" || phase === "done") && (
-                  <motion.div
-                    initial={{ opacity: 0, y: 12 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5, ease: EASE }}
-                    className="mt-8 rounded-2xl border border-accent/20 bg-accent/5 p-5 sm:p-6"
-                  >
-                    <div className="flex items-start gap-3">
-                      <span className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-accent to-violet">
-                        <Sparkles size={14} className="text-white" />
-                      </span>
-                      <p className="text-sm leading-relaxed text-text-secondary sm:text-[15px]">
-                        {answerText}
-                        {phase === "answering" && (
-                          <motion.span
-                            animate={{ opacity: [1, 0] }}
-                            transition={{ duration: 0.5, repeat: Infinity }}
-                            className="ml-0.5 inline-block h-4 w-px translate-y-0.5 bg-accent align-baseline"
-                          />
-                        )}
-                      </p>
-                    </div>
-
-                    {/* Confidence */}
-                    <div className="mt-4 flex items-center gap-3 pl-10">
-                      <span className="text-[10px] uppercase tracking-[0.18em] text-text-muted">Confidence</span>
-                      <div className="h-1 w-24 overflow-hidden rounded-full bg-white/10">
-                        <motion.div
-                          className="h-full rounded-full bg-gradient-to-r from-success/70 to-success"
-                          initial={{ width: 0 }}
-                          animate={{ width: phase === "done" ? "96%" : "0%" }}
-                          transition={{ duration: 1, ease: EASE }}
-                        />
-                      </div>
-                      <span className="text-xs font-medium text-success">96%</span>
-                    </div>
-
-                    {/* Sources */}
-                    {phase === "done" && (
-                      <motion.div
-                        initial={{ opacity: 0, y: 12 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.3, duration: 0.5, ease: EASE }}
-                        className="mt-5 grid gap-3 border-t border-edge pt-5 sm:grid-cols-3"
-                      >
-                        {SOURCES.map((s) => (
-                          <div key={s.doc} className="glass rounded-xl p-3" data-cursor="hover">
-                            <div className="flex items-center justify-between">
-                              <FileText size={13} className="text-accent" />
-                              <span className="text-[10px] font-medium text-success">{s.match}%</span>
-                            </div>
-                            <p className="mt-2 text-xs font-semibold text-white">{s.doc}</p>
-                            <p className="mt-0.5 text-[10px] text-text-muted">{s.section}</p>
-                          </div>
-                        ))}
-                      </motion.div>
-                    )}
-                  </motion.div>
-                )}
+                </motion.div>
               </AnimatePresence>
             </div>
           </div>
-        </Reveal>
+        </div>
       </div>
-      {/* LiveDemo background glow */}
-      <div className="pointer-events-none absolute right-[5%] top-[25%] z-0 h-[500px] w-[500px] rounded-full bg-violet/6 blur-[140px]" />
     </section>
+  );
+}
+
+function BrowserChrome() {
+  return (
+    <div className="flex items-center justify-between border-b border-white/10 px-6 py-4">
+      <div className="flex items-center gap-4">
+        <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-br from-indigo-500 to-violet-500">
+          <Brain className="h-5 w-5 text-white" />
+        </div>
+
+        <div>
+          <h3 className="font-semibold text-white">
+            SynaX
+          </h3>
+          <p className="text-xs tracking-[0.25em] text-violet-400 uppercase">
+            Knowledge OS
+          </p>
+        </div>
+      </div>
+
+      <div className="flex gap-3">
+        <StatusPill label="API" />
+        <StatusPill label="PG" />
+        <StatusPill label="Graph" />
+      </div>
+    </div>
+  );
+}
+
+function Sidebar({
+  screen,
+}: {
+  screen: Screen;
+}) {
+  return (
+    <div className="w-[260px] border-r border-white/10 bg-[#061026] p-5 flex flex-col gap-1">
+      <SidebarItem
+        active={screen === "dashboard"}
+        icon={LayoutDashboard}
+      >
+        Dashboard
+      </SidebarItem>
+
+      <SidebarItem
+        active={screen === "knowledge"}
+        icon={Network}
+      >
+        Knowledge Map
+      </SidebarItem>
+
+      <SidebarItem
+        active={screen === "agents"}
+        icon={Bot}
+      >
+        Agents
+      </SidebarItem>
+
+      <SidebarItem
+        active={screen === "connectors"}
+        icon={Plug}
+      >
+        Connectors
+      </SidebarItem>
+
+      <SidebarItem
+        active={screen === "ask"}
+        icon={Brain}
+      >
+        Ask Brain
+      </SidebarItem>
+    </div>
+  );
+}
+
+function DashboardScreen() {
+  return (
+    <div className="space-y-8 p-8">
+      <div className="rounded-3xl bg-gradient-to-r from-blue-600 to-violet-500 p-10">
+        <h2 className="text-4xl font-bold text-white">
+          Good afternoon.
+        </h2>
+
+        <p className="mt-3 max-w-2xl text-lg text-white/70">
+          Your organization&apos;s knowledge graph at a
+          glance.
+        </p>
+      </div>
+
+      <div className="grid grid-cols-4 gap-6">
+        <Metric title="Knowledge Score" value="96" />
+        <Metric title="Entities" value="479" />
+        <Metric title="Documents" value="17" />
+        <Metric title="Open Risks" value="37" />
+      </div>
+    </div>
+  );
+}
+
+function KnowledgeScreen() {
+  return (
+    <div className="p-8">
+      <h2 className="text-4xl font-bold text-white">
+        Intelligence Explorer
+      </h2>
+
+      <div className="mt-8 h-[500px] rounded-3xl border border-white/10 bg-[#030b1f]">
+        <div className="flex h-full items-center justify-center">
+          <GitBranch className="h-20 w-20 text-violet-400/50" />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function AgentsScreen() {
+  const agents = [
+    "ExecutiveAgent",
+    "SearchAgent",
+    "DocumentAgent",
+    "ConnectorAgent",
+    "ComplianceAgent",
+    "DigestWriter",
+  ];
+
+  return (
+    <div className="grid grid-cols-3 gap-6 p-8">
+      {agents.map((a) => (
+        <div
+          key={a}
+          className="rounded-3xl border border-white/10 bg-white/[0.02] p-8"
+        >
+          <Bot className="mb-4 text-violet-400" />
+          <h3 className="font-semibold text-white">
+            {a}
+          </h3>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function ConnectorsScreen() {
+  const items = [
+    "Slack",
+    "GitHub",
+    "Linear",
+    "Notion",
+    "Confluence",
+    "Jira",
+  ];
+
+  return (
+    <div className="grid grid-cols-2 gap-5 p-8">
+      {items.map((c) => (
+        <div
+          key={c}
+          className="rounded-2xl border border-white/10 bg-white/[0.02] p-6"
+        >
+          <Plug className="mb-3 text-violet-400" />
+          <h3 className="font-semibold text-white">
+            {c}
+          </h3>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function AskBrainScreen({
+  question,
+  answer,
+}: {
+  question: string;
+  answer: string;
+}) {
+  return (
+    <div className="space-y-8 p-8">
+      <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-5">
+        <div className="flex items-center gap-3">
+          <Search className="text-violet-400" />
+
+          <p className="text-white">
+            {question}
+            <span className="animate-pulse">|</span>
+          </p>
+        </div>
+      </div>
+
+      {answer && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="rounded-3xl border border-violet-500/20 bg-violet-500/5 p-8"
+        >
+          <div className="flex gap-4">
+            <Brain className="text-violet-400" />
+
+            <p className="leading-8 text-white/80">
+              {answer}
+            </p>
+          </div>
+
+          <div className="mt-8 grid grid-cols-3 gap-4">
+            <SourceCard title="Sprint #24 Notes" />
+            <SourceCard title="Governance Records" />
+            <SourceCard title="Connector Logs" />
+          </div>
+        </motion.div>
+      )}
+    </div>
   );
 }

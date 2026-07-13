@@ -93,7 +93,7 @@ export function UseCases() {
         <SectionHeading
           eyebrow="Use Cases"
           title="Built for every industry."
-          subtitle="BrainersOS adapts to how your organization works — with industry-specific workflows out of the box."
+          subtitle="Synax adapts to how your organization works — with industry-specific workflows out of the box."
         />
 
         <Stagger className="mt-16 grid gap-4 sm:grid-cols-2 lg:grid-cols-3" gap={0.08}>

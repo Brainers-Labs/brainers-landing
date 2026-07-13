@@ -12,32 +12,32 @@ const EASE = [0.22, 1, 0.36, 1] as const;
 const SOLUTION_STEPS = [
   {
     number: "01",
-    title: "One Neural Fabric",
-    description: "BrainersOS weaves your tools, documents, and conversations into a single, queryable intelligence layer. Nothing is lost. Everything connects.",
+    title: "One Connected Brain",
+    description: "Synax connects all your files, chats, and messages into one place. Nothing is lost. Everything connects like dots.",
     icon: GitMerge,
   },
   {
     number: "02",
-    title: "Memory That Persists",
-    description: "Institutional knowledge doesn\u2019t walk out the door. Every decision, policy, and insight is captured and contextualized \u2014 forever.",
+    title: "Memory That Never Leaves",
+    description: "Important details and decisions don't disappear when people leave the company. Everything is saved and stored forever.",
     icon: Database,
   },
   {
     number: "03",
-    title: "Answers, Not Searches",
-    description: "Stop hunting across 8 apps. Ask in plain English and get a synthesized answer drawn from your entire ecosystem \u2014 in seconds.",
+    title: "Answers Instantly",
+    description: "Stop searching through ten different folders. Just ask your question in plain English and get a direct answer in seconds.",
     icon: Search,
   },
   {
     number: "04",
-    title: "Always Current",
-    description: "Every source updates in real-time. Your intelligence layer never goes stale with continuous indexing and live syncing.",
+    title: "Always Up to Date",
+    description: "Your shared brain updates automatically. When you change a file or send a message, the brain learns it immediately.",
     icon: RefreshCw,
   },
   {
     number: "05",
-    title: "Enterprise Guardrails",
-    description: "Role-based access, audit trails, and compliance controls built into every query. Your data stays secure and governed.",
+    title: "Safe and Private",
+    description: "Only people with the right permission can see private files. Your company's information stays safe and protected.",
     icon: Shield,
   },
 ];
@@ -192,7 +192,7 @@ export function Problem() {
                 variants={lineVariants}
                 transition={{ duration: 1.1, delay: 0.3, ease: EASE }}
               >
-                Your company&apos;s intelligence is scattered across islands
+                Your company&apos;s memory is scattered across different apps
               </motion.span>
             </span>
           </h2>
@@ -203,8 +203,7 @@ export function Problem() {
             transition={{ duration: 0.9, delay: 0.8, ease: EASE }}
             className="mt-5 max-w-lg text-balance text-base leading-relaxed text-black/50 sm:text-lg"
           >
-            Every tool holds a fragment of the truth. None of them talk to each
-            other — and every question becomes an expedition.
+            Every app holds a different piece of the story. They don&apos;t talk to each other — making it hard for your team to find simple answers.
           </motion.p>
         </motion.div>
 

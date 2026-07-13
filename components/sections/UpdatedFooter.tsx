@@ -10,7 +10,6 @@ const COLUMNS = [
     links: [
       { label: "Product Overview", href: "/product" },
       { label: "Integrations", href: "/integrations" },
-      { label: "Pricing Plans", href: "/pricing" },
     ],
   },
   {
@@ -59,7 +58,9 @@ export function UpdatedFooter() {
         <div className="lg:col-span-2 flex flex-col justify-between gap-8">
           <div>
             <div className="flex items-center">
-              <Image src="/logo.png" alt="Brainers Labs Logo" width={150} height={38} className="h-9 w-auto object-contain" />
+              <span className="font-display text-xl font-semibold tracking-tight text-white/90">
+                Syna<span className="relative inline-block font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-indigo-400 to-violet-400 ml-0.5 italic">X</span>
+              </span>
             </div>
             <p className="mt-4 max-w-xs text-sm leading-relaxed text-text-muted">
               The AI operating system that turns everything your company knows

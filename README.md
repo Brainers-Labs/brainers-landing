@@ -1,6 +1,6 @@
-# BrainersOS — Landing Page
+# Synax — Landing Page
 
-The public face of **BrainersOS**, the enterprise AI operating system by **Brainers Labs**.
+The public face of **Synax**, the enterprise AI operating system by **Brainers Labs**.
 A dark, glass, 3D-native landing page built to feel expensive: every pixel has a reason.
 
 ## Stack

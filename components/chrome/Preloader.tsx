@@ -58,7 +58,7 @@ export function Preloader() {
             transition={{ delay: 0.3, duration: 0.6 }}
             className="text-xs font-medium uppercase tracking-[0.3em] text-text-muted"
           >
-            BrainersOS
+            Synax
           </motion.p>
         </motion.div>
       )}

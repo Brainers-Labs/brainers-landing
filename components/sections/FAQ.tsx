@@ -21,13 +21,13 @@ const FAQS = [
   // General Category
   {
     category: "general" as FAQCategory,
-    q: "Does BrainersOS replace ChatGPT?",
-    a: "No. BrainersOS is an enterprise intelligence operating system — it connects to your organization's data and provides answers grounded in your documents, policies, and conversations. ChatGPT is a general-purpose chatbot. They serve different purposes, and BrainersOS can actually be used alongside LLMs like GPT.",
+    q: "Does Synax replace ChatGPT?",
+    a: "No. Synax is an enterprise intelligence operating system — it connects to your organization's data and provides answers grounded in your documents, policies, and conversations. ChatGPT is a general-purpose chatbot. They serve different purposes, and Synax can actually be used alongside LLMs like GPT.",
   },
   {
     category: "general" as FAQCategory,
-    q: "What's the difference between Search and BrainersOS?",
-    a: "Search returns links. BrainersOS returns answers — with reasoning, sources, confidence scores, and evidence. It understands what your documents mean, not just what words they contain.",
+    q: "What's the difference between Search and Synax?",
+    a: "Search returns links. Synax returns answers — with reasoning, sources, confidence scores, and evidence. It understands what your documents mean, not just what words they contain.",
   },
   {
     category: "general" as FAQCategory,
@@ -36,30 +36,30 @@ const FAQS = [
   },
   {
     category: "general" as FAQCategory,
-    q: "Does BrainersOS support multiple languages?",
-    a: "Yes. BrainersOS understands and processes content in 50+ languages. Answers are returned in the same language as the question, using sources in any language.",
+    q: "Does Synax support multiple languages?",
+    a: "Yes. Synax understands and processes content in 50+ languages. Answers are returned in the same language as the question, using sources in any language.",
   },
 
   // Capabilities & Tech Category
   {
     category: "tech" as FAQCategory,
     q: "Does it support MCP?",
-    a: "Yes. BrainersOS is MCP-native. Our server implements the Model Context Protocol, allowing any MCP-compatible client to query your organizational knowledge graph.",
+    a: "Yes. Synax is MCP-native. Our server implements the Model Context Protocol, allowing any MCP-compatible client to query your organizational knowledge graph.",
   },
   {
     category: "tech" as FAQCategory,
     q: "How does memory work?",
-    a: "BrainersOS has six memory layers: working, long-term, organizational, conversational, decision, and execution memory. Each layer persists different types of context, enabling the system to remember, reason, and learn over time.",
+    a: "Synax has six memory layers: working, long-term, organizational, conversational, decision, and execution memory. Each layer persists different types of context, enabling the system to remember, reason, and learn over time.",
   },
   {
     category: "tech" as FAQCategory,
     q: "Can I build custom plugins?",
-    a: "Yes. BrainersOS has a Plugin Platform with a public SDK. Build custom connectors, data transformers, workflow actions, and UI extensions using TypeScript or Go.",
+    a: "Yes. Synax has a Plugin Platform with a public SDK. Build custom connectors, data transformers, workflow actions, and UI extensions using TypeScript or Go.",
   },
   {
     category: "tech" as FAQCategory,
     q: "Can we bring our own models?",
-    a: "Yes. BrainersOS supports BYOM (Bring Your Own Model). Connect your existing LLM infrastructure — whether it's OpenAI, Anthropic, open-source models, or your own fine-tuned models.",
+    a: "Yes. Synax supports BYOM (Bring Your Own Model). Connect your existing LLM infrastructure — whether it's OpenAI, Anthropic, open-source models, or your own fine-tuned models.",
   },
   {
     category: "tech" as FAQCategory,
@@ -76,12 +76,12 @@ const FAQS = [
   {
     category: "security" as FAQCategory,
     q: "Can we deploy on-premises?",
-    a: "Yes. BrainersOS Enterprise supports on-premises deployment in your own cloud or data center, with full control over your data and infrastructure.",
+    a: "Yes. Synax Enterprise supports on-premises deployment in your own cloud or data center, with full control over your data and infrastructure.",
   },
   {
     category: "security" as FAQCategory,
     q: "Can it connect to Slack?",
-    a: "Yes. BrainersOS has a native Slack connector that indexes messages, threads, and files from channels your team uses — while respecting access controls.",
+    a: "Yes. Synax has a native Slack connector that indexes messages, threads, and files from channels your team uses — while respecting access controls.",
   },
   {
     category: "security" as FAQCategory,
@@ -91,7 +91,7 @@ const FAQS = [
   {
     category: "security" as FAQCategory,
     q: "What happens to deleted data?",
-    a: "When a source document is deleted from its original system, BrainersOS removes it from the knowledge graph within the next sync cycle. Audit trails of what was removed are retained.",
+    a: "When a source document is deleted from its original system, Synax removes it from the knowledge graph within the next sync cycle. Audit trails of what was removed are retained.",
   },
 ];
 
@@ -109,7 +109,7 @@ export function FAQ() {
         <SectionHeading
           eyebrow="FAQ"
           title="Frequently asked questions."
-          subtitle="Everything you need to know about BrainersOS."
+          subtitle="Everything you need to know about Synax."
         />
 
         {/* Tab Filters */}

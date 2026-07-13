@@ -6,7 +6,7 @@ import { Reveal } from "../ui/Reveal";
 
 export function ClosingCTA() {
   return (
-    <section className="relative overflow-hidden py-32 sm:py-44">
+    <section id="cta" className="relative overflow-hidden py-32 sm:py-44">
       {/* full-section background image */}
       <div
         className="absolute inset-0 bg-cover bg-center opacity-[0.12]"
@@ -90,7 +90,7 @@ export function ClosingCTA() {
           <div className="relative z-10 mx-auto max-w-4xl text-center">
             <Reveal>
               <span className="inline-flex rounded-full border border-white/10 bg-white/[0.03] px-4 py-2 text-[11px] uppercase tracking-[0.25em] text-text-muted">
-                Ready to see BrainersOS in action?
+                Ready to see Synax in action?
               </span>
             </Reveal>
 
@@ -104,7 +104,7 @@ export function ClosingCTA() {
 
             <Reveal delay={0.2}>
               <p className="mx-auto mt-8 max-w-3xl text-lg leading-relaxed text-text-secondary">
-                See BrainersOS working on your own
+                See Synax working on your own
                 documents, policies, and knowledge.
                 A 30-minute demo is all it takes to
                 understand what your organization has
@@ -115,7 +115,7 @@ export function ClosingCTA() {
             <Reveal delay={0.3}>
               <div className="mt-12 flex flex-col items-center justify-center gap-4 sm:flex-row">
                 <a
-                  href="#"
+                  href="mailto:hello@brainerslabs.com?subject=Synax%20Demo%20Request"
                   className="electric-gradient group inline-flex items-center gap-3 rounded-2xl px-8 py-4 text-sm font-semibold text-white shadow-[0_0_40px_rgba(59,130,246,.35)] transition-all duration-300 hover:scale-[1.03]"
                 >
                   Request Demo
@@ -123,7 +123,7 @@ export function ClosingCTA() {
                 </a>
 
                 <a
-                  href="#"
+                  href="mailto:hello@brainerslabs.com?subject=Join%20Synax%20Waitlist"
                   className="inline-flex items-center rounded-2xl border border-white/15 bg-white/[0.02] px-8 py-4 text-sm font-medium text-white transition-all duration-300 hover:border-white/30 hover:bg-white/[0.04]"
                 >
                   Join Waitlist

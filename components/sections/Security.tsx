@@ -10,38 +10,38 @@ import { Reveal, Stagger, StaggerItem } from "../ui/Reveal";
 const PILLARS = [
   {
     icon: Lock,
-    title: "Encrypted everywhere",
-    body: "Your knowledge is encrypted in transit and at rest. Nobody reads it but you.",
+    title: "Locked safely",
+    body: "Your information is locked safely. Nobody can read it but you.",
     color: "#3b82f6",
   },
   {
     icon: KeyRound,
     title: "Access control",
-    body: "People only ever see answers from documents they're already allowed to open.",
+    body: "People only get answers from files they have permission to open.",
     color: "#7c5cfc",
   },
   {
     icon: ScrollText,
     title: "Complete audit trail",
-    body: "Every question, answer, and source is logged — ready for any regulator.",
+    body: "Every question and answer is recorded so you can always see who asked what.",
     color: "#35d6ff",
   },
   {
     icon: Server,
     title: "Your own space",
-    body: "Full multi-tenant isolation. Your organization's brain is yours alone.",
+    body: "Your company's brain is completely private and separated from everyone else.",
     color: "#18c964",
   },
   {
     icon: Fingerprint,
-    title: "Enterprise identity",
-    body: "Single sign-on with the identity provider your company already trusts.",
+    title: "Secure sign-in",
+    body: "Log in securely using the system your company already uses.",
     color: "#f5a524",
   },
   {
     icon: Landmark,
-    title: "Regulated industry spec",
-    body: "Designed with banks, insurers, and public institutions in mind from day one.",
+    title: "Super safe design",
+    body: "Built to keep data safe enough for banks and hospitals.",
     color: "#ec4899",
   },
 ];
@@ -209,7 +209,7 @@ export function Security() {
         <SectionHeading
           eyebrow="Security"
           title="Trusted with what matters most."
-          subtitle="Your knowledge is your most valuable asset. BrainersOS treats it that way — with bank-grade protection at every layer."
+          subtitle="Your knowledge is your most valuable asset. Synax treats it that way — with bank-grade protection at every layer."
         />
 
         <div className="mt-20 grid items-center gap-12 lg:grid-cols-[1fr_1.8fr]">

@@ -7,12 +7,10 @@ import { Hero } from "@/components/sections/Hero";
 import { Problem } from "@/components/sections/Problem";
 import { Solution } from "@/components/sections/Solution";
 import { LiveDemo } from "@/components/sections/LiveDemo";
-import { HowItWorks } from "@/components/sections/HowItWorks";
-import { KnowledgeGraphSection } from "@/components/sections/KnowledgeGraphSection";
-import { WhyDifferent } from "@/components/sections/WhyDifferent";
 import { Integrations } from "@/components/sections/Integrations";
+import { HowItWorks } from "@/components/sections/HowItWorks";
+import { WhyDifferent } from "@/components/sections/WhyDifferent";
 import { Security } from "@/components/sections/Security";
-import { CustomerStories } from "@/components/sections/CustomerStories";
 import { FAQ } from "@/components/sections/FAQ";
 import { ClosingCTA } from "@/components/sections/ClosingCTA";
 import { UpdatedFooter } from "@/components/sections/UpdatedFooter";
@@ -31,12 +29,10 @@ export default function Home() {
         <Problem />
         <Solution />
         <LiveDemo />
-        <HowItWorks />
-        <KnowledgeGraphSection />
-        <WhyDifferent />
         <Integrations />
+        <HowItWorks />
+        <WhyDifferent />
         <Security />
-        <CustomerStories />
         <FAQ />
         <ClosingCTA />
       </main>

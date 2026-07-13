@@ -19,15 +19,15 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://brainos.brainerslabs.com"),
+  metadataBase: new URL("https://Synax.brainerslabs.com"),
   title: {
-    default: "BrainersOS — Your Company's Intelligence. Finally Connected.",
-    template: "%s — BrainersOS",
+    default: "Synax — Your Company's Intelligence. Finally Connected.",
+    template: "%s — Synax",
   },
   description:
-    "BrainersOS by Brainers Labs turns every document, policy, and conversation in your company into one intelligent brain your teams can search, reason with, and trust.",
+    "Synax by Brainers Labs turns every document, policy, and conversation in your company into one intelligent brain your teams can search, reason with, and trust.",
   keywords: [
-    "BrainersOS",
+    "Synax",
     "Brainers Labs",
     "enterprise AI",
     "knowledge graph",
@@ -37,23 +37,23 @@ export const metadata: Metadata = {
   authors: [{ name: "Brainers Labs" }],
   openGraph: {
     type: "website",
-    siteName: "BrainersOS",
-    title: "BrainersOS — Your Company's Intelligence. Finally Connected.",
+    siteName: "Synax",
+    title: "Synax — Your Company's Intelligence. Finally Connected.",
     description:
       "The AI operating system that turns everything your company knows into answers your teams can trust.",
-    url: "https://brainos.brainerslabs.com",
+    url: "https://Synax.brainerslabs.com",
     images: [
       {
         url: "/og.png",
         width: 1200,
         height: 630,
-        alt: "BrainersOS — the enterprise AI operating system",
+        alt: "Synax — the enterprise AI operating system",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "BrainersOS — Your Company's Intelligence. Finally Connected.",
+    title: "Synax — Your Company's Intelligence. Finally Connected.",
     description:
       "The AI operating system that turns everything your company knows into answers your teams can trust.",
     images: ["/og.png"],

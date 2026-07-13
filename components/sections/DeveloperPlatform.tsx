@@ -29,9 +29,9 @@ const FEATURES = [
   { icon: Zap, label: "Event Streams", color: "#18C964" },
 ];
 
-const CODE_SNIPPET = `import { BrainersOS } from "@brainerslabs/sdk";
+const CODE_SNIPPET = `import { Synax } from "@brainerslabs/sdk";
 
-const client = new BrainersOS({
+const client = new Synax({
   apiKey: process.env.BRAINERS_API_KEY,
 });
 
@@ -57,7 +57,7 @@ export function DeveloperPlatform() {
         <SectionHeading
           eyebrow="Developer Platform"
           title="Everything developers need."
-          subtitle="APIs, SDKs, CLI, webhooks, and a plugin platform — build on BrainersOS your way."
+          subtitle="APIs, SDKs, CLI, webhooks, and a plugin platform — build on Synax your way."
         />
 
         <div className="mt-16 grid gap-8 lg:grid-cols-[1fr_1.4fr]">

@@ -22,7 +22,7 @@ export default function IntegrationsPage() {
             Connected to Everything
           </h1>
           <p className="mx-auto mt-4 max-w-2xl text-base text-white/50">
-            BrainersOS connects to your existing files, communication portals, project trackers, and databases in clicks. Zero migration necessary.
+            Synax connects to your existing files, communication portals, project trackers, and databases in clicks. Zero migration necessary.
           </p>
         </div>
         <Integrations />

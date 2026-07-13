@@ -9,7 +9,6 @@ import Image from "next/image";
 
 const LINKS = [
   { label: "Product", href: "#how-it-works" },
-  { label: "Intelligence", href: "#knowledge-graph" },
   { label: "Security", href: "#security" },
   { label: "Integrations", href: "#integrations" },
 ];
@@ -60,9 +59,10 @@ export function Navbar() {
           }`}
           aria-label="Main Navigation"
         >
-          {/* Logo Brand */}
           <Link href="/" className="flex items-center" data-cursor="hover">
-            <Image src="/logo.png" alt="Brainers Labs Logo" width={150} height={38} className="h-9 w-auto object-contain" />
+            <span className="font-display text-xl font-semibold tracking-tight text-white/90">
+              Syna<span className="relative inline-block font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-indigo-400 to-violet-400 ml-0.5 italic">X</span>
+            </span>
           </Link>
 
           {/* Desktop Nav Actions */}

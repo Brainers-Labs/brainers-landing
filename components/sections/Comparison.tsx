@@ -4,31 +4,31 @@ import { Check, X } from "lucide-react";
 import { SectionHeading } from "../ui/SectionHeading";
 import { Reveal, Stagger, StaggerItem } from "../ui/Reveal";
 
-const ROWS: Array<{ dimension: string; old: string; brainos: string }> = [
+const ROWS: Array<{ dimension: string; old: string; Synax: string }> = [
   {
     dimension: "Finding information",
     old: "Keyword search across one tool at a time",
-    brainos: "One question across everything you know",
+    Synax: "One question across everything you know",
   },
   {
     dimension: "Trusting the result",
     old: "A list of links — you verify manually",
-    brainos: "Direct answers with cited sources and confidence",
+    Synax: "Direct answers with cited sources and confidence",
   },
   {
     dimension: "Understanding context",
     old: "Files sit in folders, unrelated",
-    brainos: "A knowledge graph links policies, people, and decisions",
+    Synax: "A knowledge graph links policies, people, and decisions",
   },
   {
     dimension: "Staying current",
     old: "Stale copies and outdated wikis",
-    brainos: "Continuously synced from live systems",
+    Synax: "Continuously synced from live systems",
   },
   {
     dimension: "Protecting access",
     old: "Search often ignores permissions",
-    brainos: "Answers respect who's allowed to see what",
+    Synax: "Answers respect who's allowed to see what",
   },
 ];
 
@@ -36,8 +36,8 @@ export function Comparison() {
   return (
     <section className="relative mx-auto max-w-6xl px-6 py-32 sm:py-44">
       <SectionHeading
-        eyebrow="Why BrainersOS"
-        title="Search finds documents. BrainersOS finds answers."
+        eyebrow="Why Synax"
+        title="Search finds documents. Synax finds answers."
       />
 
       <Stagger className="mt-16 space-y-3">
@@ -49,7 +49,7 @@ export function Comparison() {
               Traditional enterprise search
             </p>
             <p className="gradient-text text-center text-xs font-semibold uppercase tracking-[0.2em]">
-              BrainersOS
+              Synax
             </p>
           </div>
         </StaggerItem>
@@ -69,7 +69,7 @@ export function Comparison() {
                 data-cursor="hover"
               >
                 <Check size={15} className="mt-0.5 shrink-0 text-success" />
-                <p className="text-sm leading-relaxed text-text-secondary">{row.brainos}</p>
+                <p className="text-sm leading-relaxed text-text-secondary">{row.Synax}</p>
               </div>
             </div>
           </StaggerItem>

@@ -9,7 +9,7 @@ export function Solution() {
       <div className="relative mx-auto max-w-7xl px-6 lg:px-10">
         <SectionHeading
           eyebrow="The Solution"
-          title="Introducing BrainersOS."
+          title="Introducing SynaX."
           subtitle="Instead of disconnected islands... everything connects into a single corporate intelligence layer."
           align="right"
         />

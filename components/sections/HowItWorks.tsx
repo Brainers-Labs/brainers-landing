@@ -17,33 +17,33 @@ const EASE = [0.22, 1, 0.36, 1] as const;
 const STAGES = [
   {
     icon: Plug,
-    title: "Connect your data.",
-    body: "BrainersOS plugs into the tools you already use — drives, email, chat, wikis — with nothing to migrate.",
+    title: "Connect your apps.",
+    body: "Synax connects to your email, chat apps, and folders in one click. You don't need to move any files.",
   },
   {
     icon: FileOutput,
-    title: "Extract the intelligence.",
-    body: "Every document, policy, and conversation is read and understood — pulling out the decision-critical knowledge.",
+    title: "Read the information.",
+    body: "It reads and learns from every document, chat message, and rule, picking out the most important facts.",
   },
   {
     icon: Sparkles,
-    title: "Understand the context.",
-    body: "AI identifies the people, rules, dates, and decisions inside your knowledge — building a decision-ready intelligence layer.",
+    title: "Understand who and when.",
+    body: "It understands who wrote what, when decisions were made, and which rules apply to your work.",
   },
   {
     icon: Network,
-    title: "Map the relationships.",
-    body: "Everything is linked into a living knowledge graph — surfacing the connections that drive smarter decisions.",
+    title: "Connect the dots.",
+    body: "It draws invisible lines to connect files, people, and projects, creating a visual map of how everything relates.",
   },
   {
     icon: Search,
-    title: "Decide with confidence.",
-    body: "Ask in plain language. BrainersOS synthesizes your entire ecosystem into actionable intelligence for every decision.",
+    title: "Get simple answers.",
+    body: "Just ask a question in plain English. The brain reads all your connected files and gives you a single, clear answer.",
   },
   {
     icon: BadgeCheck,
-    title: "Trust every insight.",
-    body: "Every insight arrives with its evidence — quoted sources, exact pages, and confidence scores — so you can act decisively.",
+    title: "Trust the source.",
+    body: "Every answer shows you exactly where it got the information from, including files, pages, and messages, so you know it is true.",
   },
 ];
 
@@ -650,14 +650,14 @@ export function HowItWorks() {
       <div className="flex flex-col gap-5 text-left">
         <span className="glass inline-flex w-fit items-center gap-2 rounded-full border border-black/10 bg-black/[0.03] px-4 py-1.5 text-xs font-medium uppercase tracking-[0.18em] text-black/50">
           <span className="h-1.5 w-1.5 rounded-full bg-accent shadow-[0_0_10px_rgba(59,130,246,0.9)]" />
-          How BrainersOS works
+          How Synax works
         </span>
         <h2 className="max-w-3xl text-balance text-3xl font-semibold leading-[1.08] tracking-tight text-black/95 sm:text-4xl lg:text-5xl">
-          From scattered files to trusted decisions.
+          From scattered files to clear answers.
         </h2>
           <p className="max-w-xl text-pretty text-sm leading-relaxed text-black/50 sm:text-base">
-          Six quiet steps happen behind the scenes. Your teams only see the last one: decisions backed by intelligence.
-        </p>
+          Six simple steps happen in the background. Your team only sees the final result: quick answers they can trust.
+          </p>
       </div>
 
       <div ref={sectionRef} className="relative mx-auto mt-24 max-w-6xl">

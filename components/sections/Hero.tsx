@@ -259,7 +259,7 @@ export function Hero() {
             className="inline-block border-b border-white/10 pb-2 mb-6"
           >
             <span className="text-[10px] font-bold uppercase tracking-[0.25em] text-[#a9c2ff]/90">
-              AI-POWERED ENTERPRISE INTELLIGENCE OPERATING SYSTEM
+              THE DIGITAL SECOND BRAIN FOR YOUR COMPANY
             </span>
           </motion.div>
 
@@ -273,7 +273,7 @@ export function Hero() {
                 variants={lineVariants}
                 transition={{ duration: 1.1, delay: 1.85, ease: EASE }}
               >
-                Your Company&apos;s Intelligence.
+                Your Company&apos;s Memory.
               </motion.span>
             </span>
             <span className="relative block overflow-hidden mt-1 sm:mt-2">
@@ -295,9 +295,7 @@ export function Hero() {
             transition={{ duration: 1.1, delay: 2.25, ease: EASE }}
             className="mt-8 max-w-sm text-[15px] leading-relaxed text-white/50"
           >
-            BrainersOS transforms documents, conversations, workflows,
-            policies and institutional knowledge into an AI-native operating
-            system that understands, reasons, remembers and acts.
+            Synax connects all your files, chats, and messages into one shared digital brain. It remembers everything, answers questions instantly, and helps your team work together.
           </motion.p>
 
           {/* Magnetic CTAs */}
@@ -309,7 +307,7 @@ export function Hero() {
           >
             <MagneticWrapper>
               <a
-                href="/pricing"
+                href="#cta"
                 data-cursor="hover"
                 className="electric-gradient group inline-flex min-h-[3.25rem] items-center gap-4 rounded-2xl py-1.5 pl-6 pr-1.5 shadow-[0_0_36px_rgba(61,123,255,0.35)] transition-all duration-300 hover:shadow-[0_0_52px_rgba(61,123,255,0.5)]"
               >

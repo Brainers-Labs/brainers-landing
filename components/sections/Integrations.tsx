@@ -43,7 +43,7 @@ export function Integrations() {
       <SectionHeading
         eyebrow="Integrations"
         title="It already speaks to your tools."
-        subtitle="BrainersOS connects to the systems your teams live in — no migration, no new habits, nothing to move."
+        subtitle="Synax connects to the systems your teams live in — no migration, no new habits, nothing to move."
       />
 
       <Reveal className="mt-16" y={40}>

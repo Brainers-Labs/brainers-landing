@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 @theme {
-  /* ——— BrainOS design tokens ——— */
+  /* ——— Synax design tokens ——— */
   --color-space: #05070a;
   --color-ink: #0b1020;
   --color-accent: #3b82f6;

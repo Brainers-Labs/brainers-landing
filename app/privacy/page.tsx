@@ -32,14 +32,14 @@ export default function PrivacyPage() {
             <section className="space-y-3">
               <h2 className="text-lg font-semibold text-white">1. Introduction</h2>
               <p>
-                Brainers Labs (“we,” “us,” or “our”) is committed to protecting the privacy of our clients and users. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use BrainersOS, our website, and associated applications.
+                Brainers Labs (“we,” “us,” or “our”) is committed to protecting the privacy of our clients and users. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use Synax, our website, and associated applications.
               </p>
             </section>
 
             <section className="space-y-3">
               <h2 className="text-lg font-semibold text-white">2. Data We Process</h2>
               <p>
-                As an enterprise AI operating system, BrainersOS processes internal company data (including documents, emails, chat history, and policies) solely on behalf of our enterprise customers. We act as a Data Processor under applicable regulations (such as GDPR and HIPAA), and our processing is strictly governed by our Customer Data Processing Agreement (DPA).
+                As an enterprise AI operating system, Synax processes internal company data (including documents, emails, chat history, and policies) solely on behalf of our enterprise customers. We act as a Data Processor under applicable regulations (such as GDPR and HIPAA), and our processing is strictly governed by our Customer Data Processing Agreement (DPA).
               </p>
             </section>
 

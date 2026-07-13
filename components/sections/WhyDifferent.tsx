@@ -6,68 +6,68 @@ import { Stagger, StaggerItem } from "../ui/Reveal";
 
 const ROWS = [
   {
-    capability: "Memory",
+    capability: "Remembering Everything",
     chatbots: false,
     rag: false,
     agents: "partial",
-    brainos: true,
+    Synax: true,
   },
   {
-    capability: "Reasoning",
+    capability: "Logical Thinking",
     chatbots: false,
     rag: false,
     agents: true,
-    brainos: true,
+    Synax: true,
   },
   {
-    capability: "Organizational Graph",
+    capability: "Connecting the Dots",
     chatbots: false,
     rag: false,
     agents: "partial",
-    brainos: true,
+    Synax: true,
   },
   {
-    capability: "Digital Twin",
+    capability: "Company Mirror",
     chatbots: false,
     rag: false,
     agents: false,
-    brainos: true,
+    Synax: true,
   },
   {
-    capability: "Event System",
+    capability: "Live Updates",
     chatbots: false,
     rag: false,
     agents: "partial",
-    brainos: true,
+    Synax: true,
   },
   {
-    capability: "Trust Layer",
+    capability: "Fact Checking",
     chatbots: false,
     rag: "partial",
     agents: "partial",
-    brainos: true,
+    Synax: true,
   },
   {
-    capability: "Governance",
+    capability: "Safety & Permissions",
     chatbots: false,
     rag: false,
     agents: "partial",
-    brainos: true,
+    Synax: true,
   },
   {
-    capability: "Enterprise Workflows",
+    capability: "Automated Work",
     chatbots: false,
     rag: false,
     agents: "partial",
-    brainos: true,
+    Synax: true,
   },
 ];
 
 const COLUMNS = [
-  { key: "chatbots" as const, label: "Chatbots" },
-  { key: "rag" as const, label: "RAG Apps" },
-  { key: "agents" as const, label: "AI Agents" },
-  { key: "brainos" as const, label: "BrainersOS" },
+  { key: "chatbots" as const, label: "Simple Chatbots" },
+  { key: "rag" as const, label: "Search Apps" },
+  { key: "agents" as const, label: "Smart Assistants" },
+  { key: "Synax" as const, label: "Second Brain (Synax)" },
 ];
 
 function Cell({ value }: { value: boolean | "partial" }) {
@@ -85,9 +85,9 @@ export function WhyDifferent() {
 
       <div className="relative mx-auto max-w-7xl px-6 lg:px-10">
         <SectionHeading
-          eyebrow="Why BrainersOS is Different"
-          title="Not just another AI tool."
-          subtitle="Built from the ground up as an enterprise intelligence operating system."
+          eyebrow="Why we are different"
+          title="Not just another chatbot."
+          subtitle="Built from the ground up as a complete shared memory and intelligence layer for your whole company."
         />
 
         <Stagger className="mt-16" gap={0.06}>
@@ -99,7 +99,7 @@ export function WhyDifferent() {
                 <span
                   key={c.key}
                   className={`text-center text-xs font-medium uppercase tracking-[0.2em] ${
-                    c.key === "brainos" ? "gradient-text" : "text-text-muted"
+                    c.key === "Synax" ? "gradient-text" : "text-text-muted"
                   }`}
                 >
                   {c.label}
@@ -121,7 +121,7 @@ export function WhyDifferent() {
                   <div
                     key={c.key}
                     className={`flex items-center justify-center self-center rounded-xl py-2 ${
-                      c.key === "brainos"
+                      c.key === "Synax"
                         ? "border border-accent/25 bg-gradient-to-br from-accent/10 to-violet/8 shadow-[0_0_30px_rgba(59,130,246,0.06)]"
                         : ""
                     }`}

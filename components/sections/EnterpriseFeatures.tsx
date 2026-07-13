@@ -27,7 +27,7 @@ const FEATURES = [
   { icon: Zap, label: "Event Sourcing", color: "#EC4899", desc: "Complete event logs for compliance and audit auditing." },
   { icon: Puzzle, label: "MCP Protocol", color: "#3B82F6", desc: "Model Context Protocol native support for quick connector hooks." },
   { icon: Blocks, label: "Plugin Platform", color: "#7C5CFC", desc: "Build private enterprise plugins with simple script APIs." },
-  { icon: Code2, label: "Developer SDKs", color: "#35D6FF", desc: "Inject BrainersOS querying directly into internal tools." },
+  { icon: Code2, label: "Developer SDKs", color: "#35D6FF", desc: "Inject Synax querying directly into internal tools." },
   { icon: ScrollText, label: "Governance Engine", color: "#18C964", desc: "Automate policy adherence checks on all actions." },
   { icon: Eye, label: "AI Observability", color: "#F5A524", desc: "Real-time query tracing, match scores, and path analysis." },
   { icon: HardDrive, label: "Cognitive Memory", color: "#EC4899", desc: "Maintains conversational context across departments." },

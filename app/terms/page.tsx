@@ -32,21 +32,21 @@ export default function TermsPage() {
             <section className="space-y-3">
               <h2 className="text-lg font-semibold text-white">1. Agreement to Terms</h2>
               <p>
-                By accessing or using BrainersOS, you agree to be bound by these Terms of Service and all terms incorporated by reference. If you do not agree to all of these terms, do not access or use our services.
+                By accessing or using Synax, you agree to be bound by these Terms of Service and all terms incorporated by reference. If you do not agree to all of these terms, do not access or use our services.
               </p>
             </section>
 
             <section className="space-y-3">
               <h2 className="text-lg font-semibold text-white">2. Use of Services</h2>
               <p>
-                BrainersOS provides an enterprise AI operating system designed to index, structure, and query corporate knowledge bases. You are responsible for ensuring that all users authorized by you comply with these terms, and you retain all rights and ownership over your company&apos;s data.
+                Synax provides an enterprise AI operating system designed to index, structure, and query corporate knowledge bases. You are responsible for ensuring that all users authorized by you comply with these terms, and you retain all rights and ownership over your company&apos;s data.
               </p>
             </section>
 
             <section className="space-y-3">
               <h2 className="text-lg font-semibold text-white">3. Acceptable Use Policy</h2>
               <p>
-                You agree not to use BrainersOS to perform illegal activities, upload malware, infringe on intellectual property, or violate data protection regulations. We reserve the right to suspend or terminate accounts that breach this policy.
+                You agree not to use Synax to perform illegal activities, upload malware, infringe on intellectual property, or violate data protection regulations. We reserve the right to suspend or terminate accounts that breach this policy.
               </p>
             </section>
 

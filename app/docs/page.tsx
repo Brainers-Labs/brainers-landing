@@ -23,7 +23,7 @@ export default function DocsPage() {
               Developer Portal
             </p>
             <h1 className="mt-3 font-display text-4xl font-semibold tracking-tight text-white sm:text-6xl">
-              BrainersOS Docs
+              Synax Docs
             </h1>
             <p className="mt-4 max-w-2xl text-base text-white/60">
               Integrate your company&apos;s intelligence into existing workflows, query knowledge graphs programmatically, and build autonomous agents.
