@@ -60,7 +60,7 @@ export function Navbar() {
           aria-label="Main Navigation"
         >
           <Link href="/" className="flex items-center" data-cursor="hover">
-            <span className="font-mono text-2xl font-bold tracking-[0.06em] text-white/95">
+            <span className="font-eightgon text-2xl font-bold tracking-[0.06em] text-white/95">
               Syna
               <motion.span
                 animate={{

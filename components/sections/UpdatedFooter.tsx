@@ -59,7 +59,7 @@ export function UpdatedFooter() {
         <div className="lg:col-span-2 flex flex-col justify-between gap-8">
           <div>
             <div className="flex items-center">
-              <span className="font-mono text-2xl font-bold tracking-[0.06em] text-white/95">
+              <span className="font-eightgon text-2xl font-bold tracking-[0.06em] text-white/95">
                 Syna
                 <motion.span
                   animate={{
