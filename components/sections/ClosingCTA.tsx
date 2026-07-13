@@ -115,18 +115,11 @@ export function ClosingCTA() {
             <Reveal delay={0.3}>
               <div className="mt-12 flex flex-col items-center justify-center gap-4 sm:flex-row">
                 <a
-                  href="mailto:hello@brainerslabs.com?subject=Synax%20Demo%20Request"
+                  href="https://synax.brainerslabs.com"
                   className="electric-gradient group inline-flex items-center gap-3 rounded-2xl px-8 py-4 text-sm font-semibold text-white shadow-[0_0_40px_rgba(59,130,246,.35)] transition-all duration-300 hover:scale-[1.03]"
                 >
-                  Request Demo
+                  Get Started
                   <ArrowRight size={16} className="transition-transform duration-300 group-hover:translate-x-1" />
-                </a>
-
-                <a
-                  href="mailto:hello@brainerslabs.com?subject=Join%20Synax%20Waitlist"
-                  className="inline-flex items-center rounded-2xl border border-white/15 bg-white/[0.02] px-8 py-4 text-sm font-medium text-white transition-all duration-300 hover:border-white/30 hover:bg-white/[0.04]"
-                >
-                  Join Waitlist
                 </a>
               </div>
             </Reveal>

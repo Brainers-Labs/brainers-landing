@@ -287,32 +287,16 @@ export function Hero() {
           >
             <MagneticWrapper>
               <a
-                href="#cta"
+                href="https://synax.brainerslabs.com"
                 data-cursor="hover"
                 className="electric-gradient group inline-flex min-h-[3.25rem] items-center gap-4 rounded-2xl py-1.5 pl-6 pr-1.5 shadow-[0_0_36px_rgba(61,123,255,0.35)] transition-all duration-300 hover:shadow-[0_0_52px_rgba(61,123,255,0.5)]"
               >
                 <span className="text-[15px] font-semibold text-white">
-                  Book Demo
+                  Get Started
                 </span>
                 <span className="flex h-10 w-10 items-center justify-center rounded-[0.8rem] bg-holo text-neon transition-transform duration-300 group-hover:rotate-45">
                   <ArrowUpRight size={17} />
                 </span>
-              </a>
-            </MagneticWrapper>
-
-            <MagneticWrapper>
-              <a
-                href="/product"
-                data-cursor="hover"
-                className="group relative inline-flex min-h-[3.25rem] items-center rounded-2xl p-[1.25px] overflow-hidden transition-all duration-300 hover:scale-[1.03] hover:shadow-[0_0_36px_rgba(61,123,255,0.25)]"
-              >
-                {/* Border Gradient Background */}
-                <div className="absolute inset-0 bg-gradient-to-r from-[#3d7bff] to-[#35d6ff] transition-opacity duration-300 opacity-80 group-hover:opacity-100" />
-                {/* Inner Button Content Mask */}
-                <div className="relative z-10 flex min-h-[calc(3.25rem-2.5px)] items-center gap-3 rounded-[15px] bg-[#050505] py-[0.6rem] px-[1.725rem] text-[15px] font-medium text-white transition-colors duration-300 group-hover:bg-[#0d0d0d]/80">
-                  <ArrowRight size={17} className="text-white/60 transition-colors duration-300 group-hover:text-neon" />
-                  <span>Get Started Now</span>
-                </div>
               </a>
             </MagneticWrapper>
           </motion.div>

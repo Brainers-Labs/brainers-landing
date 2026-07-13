@@ -121,14 +121,14 @@ export function Navbar() {
 
             {/* Request Demo Button (CTA) */}
             <Link
-              href="#cta"
+              href="https://synax.brainerslabs.com"
               data-cursor="hover"
               className="electric-gradient group hidden items-center gap-3 rounded-xl py-1.5 pl-1.5 pr-5 shadow-[0_0_28px_rgba(61,123,255,0.3)] transition-all duration-300 hover:scale-[1.03] hover:shadow-[0_0_40px_rgba(61,123,255,0.45)] sm:flex"
             >
               <span className="flex h-8 w-8 items-center justify-center rounded-[9px] bg-holo text-neon transition-transform duration-300 group-hover:rotate-90">
                 <Plus size={15} />
               </span>
-              <span className="text-sm font-semibold text-white">Request Demo</span>
+              <span className="text-sm font-semibold text-white">Get Started</span>
             </Link>
 
             {/* Mobile Menu Button */}
@@ -177,12 +177,12 @@ export function Navbar() {
                 <div className="my-2 h-px bg-white/10" />
 
                 <Link
-                  href="#cta"
+                  href="https://synax.brainerslabs.com"
                   onClick={() => setMobileMenuOpen(false)}
                   className="electric-gradient flex items-center justify-center gap-3 rounded-xl py-3 shadow-[0_0_24px_rgba(61,123,255,0.25)]"
                 >
                   <Plus size={16} className="text-neon" />
-                  <span className="text-sm font-semibold text-white">Request Demo</span>
+                  <span className="text-sm font-semibold text-white">Get Started</span>
                 </Link>
               </div>
             </motion.div>
