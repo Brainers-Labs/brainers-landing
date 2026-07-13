@@ -229,29 +229,9 @@ export function Hero() {
         transition={{ duration: 20, ease: "easeOut" }}
       />
       <div className="absolute inset-0 bg-gradient-to-b from-holo/92 via-holo/88 to-holo/92" />
-      <div className="relative mx-auto flex min-h-svh max-w-7xl flex-col justify-center px-6 pb-12 pt-28 lg:px-10">
-        {/* 3D glass orb — right side with parallax */}
-        <motion.div
-          style={{ y: orbY }}
-          className="pointer-events-none absolute inset-y-0 right-[-14%] w-[80%] opacity-60 sm:opacity-100 lg:right-[-4%] lg:w-[54%]"
-        >
-          <div className="absolute inset-[6%] rounded-full bg-[radial-gradient(circle,rgba(61,123,255,0.16),rgba(21,30,71,0.14)_45%,transparent_65%)]" />
-          <div className="relative w-full h-full">
-            <KnowledgeSphere />
-            <StatCard
-              icon={<BarChart3 size={16} />}
-              tag="Modeled impact"
-              value="-75%"
-              label="Avg. time searching, saving 2.3h per employee weekly."
-              className="absolute z-20 pointer-events-auto right-[5%] bottom-[19%]"
-              delay={2.7}
-              scrollTransform={card2Y}
-            />
-          </div>
-        </motion.div>
-
+      <div className="relative mx-auto flex min-h-svh max-w-7xl flex-col lg:flex-row items-center justify-center lg:justify-between px-6 pb-12 pt-28 lg:px-10 gap-8">
         {/* Left column (Narrative) */}
-        <motion.div style={{ y: textY }} className="relative z-10 max-w-2xl lg:pr-16">
+        <motion.div style={{ y: textY }} className="relative z-10 max-w-2xl lg:pr-16 flex-1 w-full">
           <motion.div
             initial={{ opacity: 0, y: 18, filter: "blur(8px)" }}
             animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
@@ -362,6 +342,26 @@ export function Hero() {
               </div>
             </div>
           </motion.div>
+        </motion.div>
+
+        {/* 3D glass orb — right side with parallax */}
+        <motion.div
+          style={{ y: orbY }}
+          className="pointer-events-none relative lg:absolute lg:inset-y-0 lg:right-[-4%] w-full lg:w-[54%] h-[360px] sm:h-[450px] lg:h-auto mt-8 lg:mt-0 opacity-80 lg:opacity-100 flex-1"
+        >
+          <div className="absolute inset-[6%] rounded-full bg-[radial-gradient(circle,rgba(61,123,255,0.16),rgba(21,30,71,0.14)_45%,transparent_65%)]" />
+          <div className="relative w-full h-full max-w-[450px] lg:max-w-none mx-auto">
+            <KnowledgeSphere />
+            <StatCard
+              icon={<BarChart3 size={16} />}
+              tag="Modeled impact"
+              value="-75%"
+              label="Avg. time searching, saving 2.3h per employee weekly."
+              className="absolute z-20 pointer-events-auto right-[5%] bottom-[19%]"
+              delay={2.7}
+              scrollTransform={card2Y}
+            />
+          </div>
         </motion.div>
       </div>
       {/* Drifting Background Glow Spheres */}

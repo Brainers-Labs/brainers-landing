@@ -50,7 +50,7 @@ function SidebarItem({
 }) {
   return (
     <div
-      className={`flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition-all duration-300 ${active
+      className={`flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition-all duration-300 shrink-0 whitespace-nowrap ${active
           ? "bg-violet-600/10 text-violet-400 border border-violet-500/20"
           : "text-white/40 hover:text-white/60 hover:bg-white/[0.02]"
         }`}
@@ -141,10 +141,10 @@ export function LiveDemo() {
         <div className="overflow-hidden rounded-[32px] border border-white/10 bg-[#020617] shadow-[0_40px_120px_rgba(0,0,0,0.65)]">
           <BrowserChrome />
 
-          <div className="flex h-[760px]">
+          <div className="flex flex-col md:flex-row h-auto md:h-[760px]">
             <Sidebar screen={screen} />
 
-            <div className="flex-1 overflow-hidden bg-[#030712]/50">
+            <div className="flex-1 overflow-y-auto md:overflow-hidden bg-[#030712]/50">
               <AnimatePresence mode="wait">
                 <motion.div
                   key={screen}
@@ -231,7 +231,7 @@ function Sidebar({
   screen: Screen;
 }) {
   return (
-    <div className="w-[260px] border-r border-white/10 bg-[#061026] p-5 flex flex-col gap-1">
+    <div className="w-full md:w-[260px] border-b md:border-b-0 md:border-r border-white/10 bg-[#061026] p-4 md:p-5 flex flex-row md:flex-col overflow-x-auto gap-2 md:gap-1 shrink-0 scrollbar-none">
       <SidebarItem
         active={screen === "dashboard"}
         icon={LayoutDashboard}
@@ -272,19 +272,19 @@ function Sidebar({
 
 function DashboardScreen() {
   return (
-    <div className="space-y-8 p-8">
-      <div className="rounded-3xl bg-gradient-to-r from-blue-600 to-violet-500 p-10">
-        <h2 className="text-4xl font-bold text-white">
+    <div className="space-y-6 md:space-y-8 p-4 md:p-8">
+      <div className="rounded-3xl bg-gradient-to-r from-blue-600 to-violet-500 p-6 md:p-10">
+        <h2 className="text-2xl md:text-4xl font-bold text-white">
           Good afternoon.
         </h2>
 
-        <p className="mt-3 max-w-2xl text-lg text-white/70">
+        <p className="mt-3 max-w-2xl text-sm md:text-lg text-white/70">
           Your organization&apos;s knowledge graph at a
           glance.
         </p>
       </div>
 
-      <div className="grid grid-cols-4 gap-6">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
         <Metric title="Knowledge Score" value="96" />
         <Metric title="Entities" value="479" />
         <Metric title="Documents" value="17" />
@@ -296,12 +296,12 @@ function DashboardScreen() {
 
 function KnowledgeScreen() {
   return (
-    <div className="p-8">
-      <h2 className="text-4xl font-bold text-white">
+    <div className="p-4 md:p-8">
+      <h2 className="text-2xl md:text-4xl font-bold text-white">
         Intelligence Explorer
       </h2>
 
-      <div className="mt-8 h-[500px] rounded-3xl border border-white/10 bg-[#030b1f]">
+      <div className="mt-6 md:mt-8 h-[300px] md:h-[500px] rounded-3xl border border-white/10 bg-[#030b1f]">
         <div className="flex h-full items-center justify-center">
           <GitBranch className="h-20 w-20 text-violet-400/50" />
         </div>
@@ -321,11 +321,11 @@ function AgentsScreen() {
   ];
 
   return (
-    <div className="grid grid-cols-3 gap-6 p-8">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 p-4 md:p-8">
       {agents.map((a) => (
         <div
           key={a}
-          className="rounded-3xl border border-white/10 bg-white/[0.02] p-8"
+          className="rounded-3xl border border-white/10 bg-white/[0.02] p-6 md:p-8"
         >
           <Bot className="mb-4 text-violet-400" />
           <h3 className="font-semibold text-white">
@@ -348,11 +348,11 @@ function ConnectorsScreen() {
   ];
 
   return (
-    <div className="grid grid-cols-2 gap-5 p-8">
+    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-5 p-4 md:p-8">
       {items.map((c) => (
         <div
           key={c}
-          className="rounded-2xl border border-white/10 bg-white/[0.02] p-6"
+          className="rounded-2xl border border-white/10 bg-white/[0.02] p-5 md:p-6"
         >
           <Plug className="mb-3 text-violet-400" />
           <h3 className="font-semibold text-white">
@@ -372,12 +372,12 @@ function AskBrainScreen({
   answer: string;
 }) {
   return (
-    <div className="space-y-8 p-8">
-      <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-5">
+    <div className="space-y-6 md:space-y-8 p-4 md:p-8">
+      <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-4 md:p-5">
         <div className="flex items-center gap-3">
           <Search className="text-violet-400" />
 
-          <p className="text-white">
+          <p className="text-white text-sm md:text-base">
             {question}
             <span className="animate-pulse">|</span>
           </p>
@@ -388,7 +388,7 @@ function AskBrainScreen({
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          className="rounded-3xl border border-violet-500/20 bg-violet-500/5 p-8"
+          className="rounded-3xl border border-violet-500/20 bg-violet-500/5 p-6 md:p-8"
         >
           <div className="flex gap-4">
             <Brain className="text-violet-400" />
@@ -398,7 +398,7 @@ function AskBrainScreen({
             </p>
           </div>
 
-          <div className="mt-8 grid grid-cols-3 gap-4">
+          <div className="mt-6 md:mt-8 grid grid-cols-1 sm:grid-cols-3 gap-3 md:gap-4">
             <SourceCard title="Sprint #24 Notes" />
             <SourceCard title="Governance Records" />
             <SourceCard title="Connector Logs" />

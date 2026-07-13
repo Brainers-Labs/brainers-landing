@@ -389,7 +389,7 @@ export default function IntelligenceCore() {
         ref={containerRef}
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
-        className="relative h-[560px] w-full overflow-hidden rounded-2xl border border-white/[0.06]"
+        className="relative h-[360px] sm:h-[480px] md:h-[560px] w-full overflow-hidden rounded-2xl border border-white/[0.06]"
       >
         <AmbientGrid />
         <InformationStreams />
